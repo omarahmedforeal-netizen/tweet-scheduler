@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import i18n from '@/lib/i18n.json'
 
 // ==================== TYPES ====================
 interface ScheduledTweet {
@@ -31,9 +32,9 @@ interface ThreadItem {
 
 // ==================== CONSTANTS ====================
 const LANGUAGES = [
-  { value: 'saudi', label: 'السعودية' },
-  { value: 'egyptian', label: 'المصرية' },
-  { value: 'standard', label: 'الفصحى' },
+  { value: 'saudi', label: i18n.langSaudi },
+  { value: 'egyptian', label: i18n.langEgyptian },
+  { value: 'standard', label: i18n.langStandard },
   { value: 'english', label: 'English' },
   { value: 'french', label: 'Français' },
 ]
@@ -250,12 +251,12 @@ export default function Home() {
         body: JSON.stringify({ url: tweetUrl.trim() }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل جلب التغريدة')
+      if (!res.ok) throw new Error(data.error || i18n.fetchFailed)
       setFetchedText(data.text)
-      addToast('تم جلب التغريدة بنجاح', 'success')
+      addToast(i18n.fetchSuccess, 'success')
       await handleTranslate(data.text)
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'حدث خطأ غير متوقع'
+      const msg = err instanceof Error ? err.message : i18n.unexpectedError
       setFetchError(msg)
       addToast(msg, 'error')
     } finally {
@@ -275,11 +276,11 @@ export default function Home() {
         body: JSON.stringify({ text: textToTranslate, language }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل الترجمة')
+      if (!res.ok) throw new Error(data.error || i18n.translateFailed)
       setTranslatedText(data.translated)
-      addToast('تمت الترجمة بنجاح', 'success')
+      addToast(i18n.translateSuccess, 'success')
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'حدث خطأ في الترجمة'
+      const msg = err instanceof Error ? err.message : i18n.translateError
       setTranslateError(msg)
       addToast(msg, 'error')
     } finally {
@@ -302,13 +303,13 @@ export default function Home() {
           body: JSON.stringify({ text: src, language }),
         })
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'فشل الترجمة')
+        if (!res.ok) throw new Error(data.error || i18n.translateFailed)
         newItems[i] = { ...newItems[i], text: data.translated }
       }
       setThreadItems(newItems)
-      addToast('تمت ترجمة الثريد بنجاح', 'success')
+      addToast(i18n.threadTranslateSuccess, 'success')
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'حدث خطأ في الترجمة'
+      const msg = err instanceof Error ? err.message : i18n.translateError
       setTranslateError(msg)
       addToast(msg, 'error')
     } finally {
@@ -318,7 +319,7 @@ export default function Home() {
 
   const handleSchedule = async () => {
     if (!scheduledAt) {
-      setScheduleError('يرجى تحديد وقت النشر')
+      setScheduleError(i18n.specifyPublishTime)
       return
     }
 
@@ -326,7 +327,7 @@ export default function Home() {
     if (isThreadMode) {
       const validItems = threadItems.filter(item => item.text.trim())
       if (validItems.length < 2) {
-        setScheduleError('الثريد يحتاج تغريدتين على الأقل')
+        setScheduleError(i18n.threadNeedsTwoTweets)
         return
       }
       setLoadingSchedule(true)
@@ -342,14 +343,14 @@ export default function Home() {
           }),
         })
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'فشل الجدولة')
-        addToast(`تم جدولة ثريد من ${validItems.length} تغريدات`, 'success')
+        if (!res.ok) throw new Error(data.error || i18n.scheduleFailed)
+        addToast(`${i18n.scheduledThreadOf} ${validItems.length} ${i18n.tweetsUnit}`, 'success')
         setThreadItems([{ text: '', originalText: '' }])
         setIsThreadMode(false)
         await loadScheduledTweets()
         resetScheduleTime()
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'حدث خطأ في الجدولة'
+        const msg = err instanceof Error ? err.message : i18n.scheduleError
         setScheduleError(msg)
         addToast(msg, 'error')
       } finally {
@@ -360,7 +361,7 @@ export default function Home() {
 
     // Single tweet scheduling
     if (!translatedText.trim()) {
-      setScheduleError('لا يوجد نص للجدولة')
+      setScheduleError(i18n.noTextToSchedule)
       return
     }
     setLoadingSchedule(true)
@@ -377,8 +378,8 @@ export default function Home() {
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل الجدولة')
-      addToast('تم جدولة التغريدة بنجاح!', 'success')
+      if (!res.ok) throw new Error(data.error || i18n.scheduleFailed)
+      addToast(i18n.scheduleSuccess, 'success')
       setTweetUrl('')
       setFetchedText('')
       setDirectText('')
@@ -386,7 +387,7 @@ export default function Home() {
       await loadScheduledTweets()
       resetScheduleTime()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'حدث خطأ في الجدولة'
+      const msg = err instanceof Error ? err.message : i18n.scheduleError
       setScheduleError(msg)
       addToast(msg, 'error')
     } finally {
@@ -411,15 +412,15 @@ export default function Home() {
         body: JSON.stringify({ id }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل النشر')
+      if (!res.ok) throw new Error(data.error || i18n.publishFailed)
       if (data.thread) {
-        addToast(`تم نشر ثريد (${data.posted}/${data.total})`, 'success')
+        addToast(`${i18n.publishedThreadOf} (${data.posted}/${data.total})`, 'success')
       } else {
-        addToast('تم نشر التغريدة بنجاح!', 'success')
+        addToast(i18n.publishSuccess, 'success')
       }
       await loadScheduledTweets()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'فشل النشر'
+      const msg = err instanceof Error ? err.message : i18n.publishFailed
       addToast(msg, 'error')
     } finally {
       setLoadingPost(null)
@@ -436,12 +437,12 @@ export default function Home() {
         body: JSON.stringify({ id }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل الحذف')
-      addToast('تم حذف التغريدة', 'info')
+      if (!res.ok) throw new Error(data.error || i18n.deleteFailed)
+      addToast(i18n.deleteSuccess, 'info')
       setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n })
       await loadScheduledTweets()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'فشل الحذف'
+      const msg = err instanceof Error ? err.message : i18n.deleteFailed
       addToast(msg, 'error')
     } finally {
       setLoadingDelete(null)
@@ -471,12 +472,12 @@ export default function Home() {
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل التعديل')
-      addToast('تم تعديل التغريدة بنجاح', 'success')
+      if (!res.ok) throw new Error(data.error || i18n.editFailed)
+      addToast(i18n.editSuccess, 'success')
       setEditingTweet(null)
       await loadScheduledTweets()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'فشل التعديل'
+      const msg = err instanceof Error ? err.message : i18n.editFailed
       addToast(msg, 'error')
     } finally {
       setLoadingEdit(false)
@@ -503,12 +504,12 @@ export default function Home() {
         body: JSON.stringify({ ids: Array.from(selectedIds) }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل الحذف')
-      addToast(`تم حذف ${data.deleted} تغريدة`, 'info')
+      if (!res.ok) throw new Error(data.error || i18n.deleteFailed)
+      addToast(`${i18n.deletedCount} ${data.deleted} ${i18n.tweetUnit}`, 'info')
       setSelectedIds(new Set())
       await loadScheduledTweets()
     } catch (err: unknown) {
-      addToast(err instanceof Error ? err.message : 'فشل الحذف', 'error')
+      addToast(err instanceof Error ? err.message : i18n.deleteFailed, 'error')
     } finally {
       setLoadingBulk(false)
     }
@@ -524,12 +525,12 @@ export default function Home() {
         body: JSON.stringify({ bulk: true, ids: Array.from(selectedIds) }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'فشل النشر')
-      addToast(`تم نشر ${data.posted} تغريدة`, 'success')
+      if (!res.ok) throw new Error(data.error || i18n.publishFailed)
+      addToast(`${i18n.publishedCount} ${data.posted} ${i18n.tweetUnit}`, 'success')
       setSelectedIds(new Set())
       await loadScheduledTweets()
     } catch (err: unknown) {
-      addToast(err instanceof Error ? err.message : 'فشل النشر', 'error')
+      addToast(err instanceof Error ? err.message : i18n.publishFailed, 'error')
     } finally {
       setLoadingBulk(false)
     }
@@ -611,14 +612,14 @@ export default function Home() {
       {confirmPostId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--modal-overlay)' }}>
           <div className="glass rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl animate-modal-in">
-            <h3 className="text-lg font-bold mb-3">تأكيد النشر</h3>
-            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>هل أنت متأكد أنك تريد نشر هذه التغريدة الآن؟</p>
+            <h3 className="text-lg font-bold mb-3">{i18n.confirmPublish}</h3>
+            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.confirmPublishMessage}</p>
             <div className="flex gap-3">
               <button onClick={() => handlePostNow(confirmPostId)} className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all text-sm">
-                نعم، انشر
+                {i18n.yesPublish}
               </button>
               <button onClick={() => setConfirmPostId(null)} className="flex-1 py-2.5 glass glass-hover font-medium rounded-xl transition-all text-sm">
-                إلغاء
+                {i18n.cancel}
               </button>
             </div>
           </div>
@@ -629,14 +630,14 @@ export default function Home() {
       {confirmDeleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--modal-overlay)' }}>
           <div className="glass rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl animate-modal-in">
-            <h3 className="text-lg font-bold mb-3">تأكيد الحذف</h3>
-            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>هل أنت متأكد أنك تريد حذف هذه التغريدة؟</p>
+            <h3 className="text-lg font-bold mb-3">{i18n.confirmDelete}</h3>
+            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.confirmDeleteMessage}</p>
             <div className="flex gap-3">
               <button onClick={() => handleDelete(confirmDeleteId)} className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all text-sm">
-                نعم، احذف
+                {i18n.yesDelete}
               </button>
               <button onClick={() => setConfirmDeleteId(null)} className="flex-1 py-2.5 glass glass-hover font-medium rounded-xl transition-all text-sm">
-                إلغاء
+                {i18n.cancel}
               </button>
             </div>
           </div>
@@ -648,10 +649,10 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--modal-overlay)' }}>
           <div className="glass rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl animate-modal-in">
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <EditIcon /> تعديل التغريدة
+              <EditIcon /> {i18n.editTweet}
             </h3>
             <div className="mb-4">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>النص</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.textLabel}</label>
               <textarea
                 value={editText}
                 onChange={e => setEditText(e.target.value)}
@@ -666,7 +667,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mb-5">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>وقت النشر</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.publishTimeLabel}</label>
               <input
                 type="datetime-local"
                 value={editTime}
@@ -680,10 +681,10 @@ export default function Home() {
                 disabled={loadingEdit || editText.length > CHAR_LIMIT || !editText.trim()}
                 className="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2"
               >
-                {loadingEdit ? <><Spinner /> جاري الحفظ...</> : 'حفظ التعديلات'}
+                {loadingEdit ? <><Spinner /> {i18n.saving}</> : i18n.saveChanges}
               </button>
               <button onClick={() => setEditingTweet(null)} className="flex-1 py-2.5 glass glass-hover font-medium rounded-xl transition-all text-sm">
-                إلغاء
+                {i18n.cancel}
               </button>
             </div>
           </div>
@@ -700,15 +701,15 @@ export default function Home() {
               <span className="text-2xl sm:text-3xl">&#128038;</span>
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold">مجدول التغريدات</h1>
-              <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>جلب &middot; ترجمة &middot; جدولة</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">{i18n.pageTitle}</h1>
+              <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.pageSubtitle}</p>
             </div>
           </div>
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="p-2.5 rounded-xl glass glass-hover transition-all"
-            title={isDark ? 'الوضع الفاتح' : 'الوضع الداكن'}
+            title={isDark ? i18n.lightMode : i18n.darkMode}
           >
             {isDark ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -719,19 +720,19 @@ export default function Home() {
           <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6 animate-slide-up">
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{stats.total}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>الكل</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.all}</div>
             </div>
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold text-yellow-500">{stats.pending}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>قيد الانتظار</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.pending}</div>
             </div>
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold text-green-500">{stats.posted}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>نُشرت</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.published}</div>
             </div>
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold text-red-500">{stats.failed}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>فشلت</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.failed}</div>
             </div>
           </div>
         )}
@@ -751,7 +752,7 @@ export default function Home() {
                     : 'hover:bg-white/10'
                 }`}
               >
-                جلب من رابط
+                {i18n.fetchFromUrl}
               </button>
               <button
                 onClick={() => { setInputMode('write'); setIsThreadMode(false) }}
@@ -761,7 +762,7 @@ export default function Home() {
                     : 'hover:bg-white/10'
                 }`}
               >
-                كتابة مباشرة
+                {i18n.directWrite}
               </button>
               <button
                 onClick={() => { setIsThreadMode(true); setInputMode('write') }}
@@ -771,7 +772,7 @@ export default function Home() {
                     : 'hover:bg-white/10'
                 }`}
               >
-                ثريد
+                {i18n.thread}
               </button>
             </div>
           </div>
@@ -780,7 +781,7 @@ export default function Home() {
           {inputMode === 'fetch' && !isThreadMode && (
             <div className="animate-fade-in">
               <div className="mb-4">
-                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>رابط التغريدة</label>
+                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.tweetUrl}</label>
                 <div className="flex gap-2 sm:gap-3">
                   <input
                     type="url"
@@ -796,7 +797,7 @@ export default function Home() {
                     disabled={loadingFetch || !tweetUrl.trim()}
                     className="px-4 sm:px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 whitespace-nowrap text-sm"
                   >
-                    {loadingFetch ? <Spinner /> : 'جلب'}
+                    {loadingFetch ? <Spinner /> : i18n.fetch}
                   </button>
                 </div>
                 {fetchError && <p className="mt-2 text-red-400 text-sm">&#9888; {fetchError}</p>}
@@ -804,7 +805,7 @@ export default function Home() {
 
               {fetchedText && (
                 <div className="mb-4 animate-slide-up">
-                  <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>النص الأصلي</label>
+                  <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.originalText}</label>
                   <div className="p-4 rounded-xl" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
                     <p className="text-sm leading-relaxed" dir="auto">{fetchedText}</p>
                   </div>
@@ -817,12 +818,12 @@ export default function Home() {
           {inputMode === 'write' && !isThreadMode && (
             <div className="animate-fade-in">
               <div className="mb-4">
-                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>اكتب تغريدتك</label>
+                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.writeYourTweet}</label>
                 <textarea
                   value={directText}
                   onChange={e => setDirectText(e.target.value)}
                   rows={4}
-                  placeholder="اكتب نص التغريدة هنا..."
+                  placeholder={i18n.writeTweetPlaceholder}
                   className="w-full input-field rounded-xl px-4 py-3 text-sm leading-relaxed resize-none placeholder-gray-500"
                   dir="rtl"
                 />
@@ -864,7 +865,7 @@ export default function Home() {
                         value={item.text}
                         onChange={e => updateThreadItem(index, 'text', e.target.value)}
                         rows={3}
-                        placeholder={`التغريدة ${index + 1}...`}
+                        placeholder={`${i18n.tweetNumber} ${index + 1}...`}
                         className="w-full bg-transparent text-sm leading-relaxed resize-none focus:outline-none placeholder-gray-500"
                         dir="rtl"
                       />
@@ -877,7 +878,7 @@ export default function Home() {
                 className="w-full py-2.5 rounded-xl border-2 border-dashed transition-all flex items-center justify-center gap-2 text-sm font-medium hover:border-indigo-500/50 hover:bg-indigo-500/5"
                 style={{ borderColor: 'var(--glass-border)', color: 'rgb(var(--foreground-secondary))' }}
               >
-                <PlusIcon /> إضافة تغريدة
+                <PlusIcon /> {i18n.addTweet}
               </button>
             </div>
           )}
@@ -885,7 +886,7 @@ export default function Home() {
           {/* ===== LANGUAGE SELECTOR ===== */}
           {(hasSourceText || isThreadMode) && (
             <div className="mt-4 mb-4 animate-slide-up">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>لغة الترجمة</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.translationLanguage}</label>
               <div className="flex gap-2 flex-wrap">
                 {LANGUAGES.map(lang => (
                   <button
@@ -908,7 +909,7 @@ export default function Home() {
                 disabled={loadingTranslate || (isThreadMode ? threadItems.every(i => !i.text.trim()) : !sourceText.trim())}
                 className="mt-3 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all text-sm flex items-center gap-2"
               >
-                {loadingTranslate ? <><Spinner /> جاري الترجمة...</> : 'ترجمة'}
+                {loadingTranslate ? <><Spinner /> {i18n.translating}</> : i18n.translate}
               </button>
               {translateError && <p className="mt-2 text-red-400 text-sm">&#9888; {translateError}</p>}
             </div>
@@ -918,7 +919,7 @@ export default function Home() {
           {!isThreadMode && (loadingTranslate || translatedText) && (
             <div className="mb-4 animate-slide-up">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>النص المترجم</label>
+                <label className="text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.translatedText}</label>
                 {!loadingTranslate && translatedText && (
                   <span className={`text-xs font-mono ${charOver ? 'text-red-400' : charCount > CHAR_LIMIT * 0.9 ? 'text-yellow-400' : 'text-gray-500'}`}>
                     {charCount}/{CHAR_LIMIT}
@@ -928,7 +929,7 @@ export default function Home() {
               <div className={`rounded-xl p-4 ${charOver ? 'border-red-500/40' : ''}`} style={{ background: 'var(--card-bg)', border: `1px solid ${charOver ? 'rgba(239,68,68,0.4)' : 'var(--card-border)'}` }}>
                 {loadingTranslate ? (
                   <div className="flex items-center gap-3 text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>
-                    <Spinner size="w-4 h-4" /> جاري الترجمة...
+                    <Spinner size="w-4 h-4" /> {i18n.translating}
                   </div>
                 ) : (
                   <textarea
@@ -940,14 +941,14 @@ export default function Home() {
                   />
                 )}
               </div>
-              {charOver && <p className="mt-1 text-red-400 text-xs">تجاوز الحد الأقصى ({CHAR_LIMIT} حرف)</p>}
+              {charOver && <p className="mt-1 text-red-400 text-xs">{i18n.charLimitExceeded} ({CHAR_LIMIT} {i18n.charUnit})</p>}
             </div>
           )}
 
           {/* ===== SCHEDULE TIME ===== */}
           {((translatedText && !loadingTranslate && !isThreadMode) || (isThreadMode && threadItems.some(i => i.text.trim()))) && (
             <div className="mb-5 animate-slide-up">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>وقت النشر</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>{i18n.publishTimeLabel}</label>
               <input
                 type="datetime-local"
                 value={scheduledAt}
@@ -967,8 +968,8 @@ export default function Home() {
                 className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-600/25 text-base"
               >
                 {loadingSchedule ? (
-                  <span className="flex items-center justify-center gap-2"><Spinner size="w-5 h-5" /> جاري الجدولة...</span>
-                ) : isThreadMode ? `جدولة الثريد (${threadItems.filter(i => i.text.trim()).length} تغريدات)` : 'جدولة النشر'}
+                  <span className="flex items-center justify-center gap-2"><Spinner size="w-5 h-5" /> {i18n.scheduling}</span>
+                ) : isThreadMode ? `${i18n.scheduleThread} (${threadItems.filter(i => i.text.trim()).length} ${i18n.tweetsUnit})` : i18n.schedulePublish}
               </button>
             </div>
           )}
@@ -979,10 +980,10 @@ export default function Home() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2">
               <span className="w-1 h-6 bg-gradient-to-b from-purple-400 to-pink-500 rounded-full"></span>
-              التغريدات المجدولة
+              {i18n.scheduledTweets}
             </h2>
             <span className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--card-bg)', color: 'rgb(var(--foreground-secondary))' }}>
-              {filteredTweets.length} تغريدة
+              {filteredTweets.length} {i18n.tweetUnit}
             </span>
           </div>
 
@@ -996,7 +997,7 @@ export default function Home() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="بحث في التغريدات..."
+                placeholder={i18n.searchPlaceholder}
                 className="w-full input-field rounded-xl pr-10 pl-4 py-2.5 text-sm placeholder-gray-500"
                 dir="rtl"
               />
@@ -1005,7 +1006,7 @@ export default function Home() {
 
           {/* Filter Tabs */}
           <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-            {([['all', 'الكل'], ['pending', 'قيد الانتظار'], ['posted', 'نُشرت'], ['failed', 'فشلت']] as [FilterTab, string][]).map(([tab, label]) => (
+            {([['all', i18n.all], ['pending', i18n.pending], ['posted', i18n.published], ['failed', i18n.failed]] as [FilterTab, string][]).map(([tab, label]) => (
               <button
                 key={tab}
                 onClick={() => setFilterTab(tab)}
@@ -1034,7 +1035,7 @@ export default function Home() {
             <div className="text-center py-12">
               <div className="text-5xl mb-3">&#128235;</div>
               <p style={{ color: 'rgb(var(--foreground-secondary))' }}>
-                {searchQuery ? 'لا توجد نتائج للبحث' : 'لا توجد تغريدات مجدولة بعد'}
+                {searchQuery ? i18n.noSearchResults : i18n.noTweets}
               </p>
             </div>
           ) : (
@@ -1061,7 +1062,7 @@ export default function Home() {
                         <div className="flex items-center gap-1.5 shrink-0">
                           {tweet.isThread && (
                             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-                              ثريد {(tweet.threadIndex || 0) + 1}
+                              {i18n.thread} {(tweet.threadIndex || 0) + 1}
                             </span>
                           )}
                           <span className={`text-xs px-2 py-1 rounded-full font-medium ${
@@ -1069,9 +1070,9 @@ export default function Home() {
                             : tweet.status === 'failed' ? 'status-failed'
                             : 'status-pending'
                           }`}>
-                            {tweet.status === 'posted' ? '✓ نُشر'
-                            : tweet.status === 'failed' ? '✗ فشل'
-                            : '⌛ قيد الانتظار'}
+                            {tweet.status === 'posted' ? `✓ ${i18n.statusPublished}`
+                            : tweet.status === 'failed' ? `✗ ${i18n.statusFailed}`
+                            : `⌛ ${i18n.statusPending}`}
                           </span>
                         </div>
                       </div>
@@ -1092,7 +1093,7 @@ export default function Home() {
                           <button
                             onClick={() => handleOpenEdit(tweet)}
                             className="text-xs px-2 py-1.5 rounded-lg transition-all text-indigo-400 hover:bg-indigo-500/20"
-                            title="تعديل"
+                            title={i18n.edit}
                           >
                             <EditIcon />
                           </button>
@@ -1101,7 +1102,7 @@ export default function Home() {
                             disabled={loadingPost === tweet.id}
                             className="text-xs px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-blue-400 rounded-lg transition-all disabled:opacity-50"
                           >
-                            {loadingPost === tweet.id ? <Spinner size="w-3 h-3" /> : 'نشر الآن'}
+                            {loadingPost === tweet.id ? <Spinner size="w-3 h-3" /> : i18n.publishNow}
                           </button>
                         </>
                       )}
@@ -1109,7 +1110,7 @@ export default function Home() {
                         onClick={() => setConfirmDeleteId(tweet.id)}
                         disabled={loadingDelete === tweet.id}
                         className="text-xs px-2 py-1.5 bg-red-600/10 hover:bg-red-600/30 border border-red-500/20 text-red-400 rounded-lg transition-all disabled:opacity-50"
-                        title="حذف"
+                        title={i18n.delete}
                       >
                         {loadingDelete === tweet.id ? <Spinner size="w-3 h-3" /> : <TrashIcon />}
                       </button>
@@ -1122,7 +1123,7 @@ export default function Home() {
                           style={{ color: 'rgb(var(--foreground-secondary))' }}
                           dir="ltr"
                         >
-                          المصدر &#x2197;
+                          {i18n.source} &#x2197;
                         </a>
                       )}
                     </div>
@@ -1135,7 +1136,7 @@ export default function Home() {
 
         {/* Footer */}
         <p className="text-center text-xs mt-6" style={{ color: 'rgb(var(--foreground-secondary))' }}>
-          Tweet Scheduler &middot; مبني بـ Next.js 14
+          Tweet Scheduler &middot; {i18n.builtWith}
         </p>
       </div>
 
@@ -1144,7 +1145,7 @@ export default function Home() {
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-float-up">
           <div className="glass rounded-2xl px-5 py-3 flex items-center gap-3 shadow-2xl border border-indigo-500/30">
             <span className="text-sm font-medium whitespace-nowrap">
-              {selectedIds.size} محدد
+              {selectedIds.size} {i18n.selected}
             </span>
             <div className="w-px h-6 bg-white/10" />
             <button
@@ -1153,7 +1154,7 @@ export default function Home() {
               className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2"
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
-              نشر المحدد
+              {i18n.publishSelected}
             </button>
             <button
               onClick={handleBulkDelete}
@@ -1161,13 +1162,13 @@ export default function Home() {
               className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:bg-gray-600 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2"
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
-              حذف المحدد
+              {i18n.deleteSelected}
             </button>
             <button
               onClick={() => setSelectedIds(new Set())}
               className="px-3 py-2 glass glass-hover text-sm rounded-xl transition-all"
             >
-              إلغاء
+              {i18n.cancel}
             </button>
           </div>
         </div>
