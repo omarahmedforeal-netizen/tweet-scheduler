@@ -32,7 +32,7 @@ interface ThreadItem {
 }
 
 // ==================== CONSTANTS ====================
-// LANGUAGES moved inside Home() as useMemo (depends on i18n state)
+// LANGUAGES defined inside Home() (uses i18n from JSON.parse)
 
 const CHAR_LIMIT = 280
 type FilterTab = 'all' | 'pending' | 'posted' | 'failed'
@@ -91,31 +91,16 @@ const MinusIcon = () => (
 
 // ==================== MAIN COMPONENT ====================
 export default function Home() {
-  // --- i18n runtime loading ---
-  const [i18n, setI18n] = useState<I18nStrings>({});
-  const [i18nLoaded, setI18nLoaded] = useState(false);
+  // --- i18n: JSON.parse at runtime prevents minifier from escaping Arabic ---
+  const i18n: I18nStrings = JSON.parse('{"langSaudi":"السعودية","langEgyptian":"المصرية","langStandard":"الفصحى","fetchFailed":"فشل جلب التغريدة","fetchSuccess":"تم جلب التغريدة بنجاح","unexpectedError":"حدث خطأ غير متوقع","translateFailed":"فشل الترجمة","translateSuccess":"تمت الترجمة بنجاح","translateError":"حدث خطأ في الترجمة","threadTranslateSuccess":"تمت ترجمة الثريد بنجاح","specifyPublishTime":"يرجى تحديد وقت النشر","threadNeedsTwoTweets":"الثريد يحتاج تغريدتين على الأقل","scheduleFailed":"فشل الجدولة","scheduleError":"حدث خطأ في الجدولة","noTextToSchedule":"لا يوجد نص للجدولة","scheduleSuccess":"تم جدولة التغريدة بنجاح!","publishFailed":"فشل النشر","publishSuccess":"تم نشر التغريدة بنجاح!","deleteFailed":"فشل الحذف","deleteSuccess":"تم حذف التغريدة","editFailed":"فشل التعديل","editSuccess":"تم تعديل التغريدة بنجاح","confirmPublish":"تأكيد النشر","confirmPublishMessage":"هل أنت متأكد أنك تريد نشر هذه التغريدة الآن؟","confirmDelete":"تأكيد الحذف","confirmDeleteMessage":"هل أنت متأكد أنك تريد حذف هذه التغريدة؟","yesPublish":"نعم، انشر","yesDelete":"نعم، احذف","cancel":"إلغاء","editTweet":"تعديل التغريدة","textLabel":"النص","publishTimeLabel":"وقت النشر","saveChanges":"حفظ التعديلات","saving":"جاري الحفظ...","pageTitle":"مجدول التغريدات","pageSubtitle":"جلب · ترجمة · جدولة","lightMode":"الوضع الفاتح","darkMode":"الوضع الداكن","all":"الكل","pending":"قيد الانتظار","published":"نُشرت","failed":"فشلت","fetchFromUrl":"جلب من رابط","directWrite":"كتابة مباشرة","thread":"ثريد","tweetUrl":"رابط التغريدة","fetch":"جلب","originalText":"النص الأصلي","writeYourTweet":"اكتب تغريدتك","writeTweetPlaceholder":"اكتب نص التغريدة هنا...","addTweet":"إضافة تغريدة","tweetNumber":"التغريدة","translationLanguage":"لغة الترجمة","translate":"ترجمة","translating":"جاري الترجمة...","translatedText":"النص المترجم","charLimitExceeded":"تجاوز الحد الأقصى","charUnit":"حرف","publishTime":"وقت النشر","scheduling":"جاري الجدولة...","schedulePublish":"جدولة النشر","scheduleThread":"جدولة الثريد","tweetsUnit":"تغريدات","scheduledTweets":"التغريدات المجدولة","tweetUnit":"تغريدة","searchPlaceholder":"بحث في التغريدات...","noSearchResults":"لا توجد نتائج للبحث","noTweets":"لا توجد تغريدات مجدولة بعد","statusPublished":"نُشر","statusFailed":"فشل","statusPending":"قيد الانتظار","edit":"تعديل","publishNow":"نشر الآن","delete":"حذف","source":"المصدر","builtWith":"مبني بـ Next.js 14","selected":"محدد","publishSelected":"نشر المحدد","deleteSelected":"حذف المحدد","scheduledThreadOf":"تم جدولة ثريد من","publishedThreadOf":"تم نشر ثريد","deletedCount":"تم حذف","publishedCount":"تم نشر"}');
 
-  useEffect(() => {
-    fetch('/i18n.json')
-      .then(res => res.text())
-      .then(text => {
-        const data = JSON.parse(text);
-        setI18n(data);
-        setI18nLoaded(true);
-      })
-      .catch(err => {
-        console.error('Failed to load i18n:', err);
-        setI18nLoaded(true);
-      });
-  }, []);
-
-  const LANGUAGES = useMemo(() => [
-    { value: 'saudi', label: i18n.langSaudi || '' },
-    { value: 'egyptian', label: i18n.langEgyptian || '' },
-    { value: 'standard', label: i18n.langStandard || '' },
+  const LANGUAGES = [
+    { value: 'saudi', label: i18n.langSaudi },
+    { value: 'egyptian', label: i18n.langEgyptian },
+    { value: 'standard', label: i18n.langStandard },
     { value: 'english', label: 'English' },
     { value: 'french', label: 'Français' },
-  ], [i18n]);
+  ];
 
   // --- Theme ---
   const [isDark, setIsDark] = useState(true)
