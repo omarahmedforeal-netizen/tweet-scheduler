@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import i18n from '@/lib/i18n.json'
+// i18n will be loaded at runtime to prevent minifier from escaping Arabic text
+type I18nStrings = Record<string, string>;
 
 // ==================== TYPES ====================
 interface ScheduledTweet {
@@ -31,13 +32,7 @@ interface ThreadItem {
 }
 
 // ==================== CONSTANTS ====================
-const LANGUAGES = [
-  { value: 'saudi', label: i18n.langSaudi },
-  { value: 'egyptian', label: i18n.langEgyptian },
-  { value: 'standard', label: i18n.langStandard },
-  { value: 'english', label: 'English' },
-  { value: 'french', label: 'Français' },
-]
+// LANGUAGES moved inside Home() as useMemo (depends on i18n state)
 
 const CHAR_LIMIT = 280
 type FilterTab = 'all' | 'pending' | 'posted' | 'failed'
@@ -96,6 +91,32 @@ const MinusIcon = () => (
 
 // ==================== MAIN COMPONENT ====================
 export default function Home() {
+  // --- i18n runtime loading ---
+  const [i18n, setI18n] = useState<I18nStrings>({});
+  const [i18nLoaded, setI18nLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch('/i18n.json')
+      .then(res => res.text())
+      .then(text => {
+        const data = JSON.parse(text);
+        setI18n(data);
+        setI18nLoaded(true);
+      })
+      .catch(err => {
+        console.error('Failed to load i18n:', err);
+        setI18nLoaded(true);
+      });
+  }, []);
+
+  const LANGUAGES = useMemo(() => [
+    { value: 'saudi', label: i18n.langSaudi || '' },
+    { value: 'egyptian', label: i18n.langEgyptian || '' },
+    { value: 'standard', label: i18n.langStandard || '' },
+    { value: 'english', label: 'English' },
+    { value: 'french', label: 'Français' },
+  ], [i18n]);
+
   // --- Theme ---
   const [isDark, setIsDark] = useState(true)
 
