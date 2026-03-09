@@ -1,17 +1,27 @@
 /** @type {import('next').NextConfig} */
+const TerserPlugin = require('terser-webpack-plugin')
+
 const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['twitter-api-v2']
   },
-  swcMinify: true,
-  compiler: {
-    // Preserve UTF-8 characters during compilation
-  },
+  swcMinify: false,
   webpack: (config, { isServer }) => {
-    // Ensure UTF-8 output for Arabic text
     if (!isServer) {
       config.output = config.output || {}
       config.output.charset = true
+
+      config.optimization = config.optimization || {}
+      config.optimization.minimizer = [
+        new TerserPlugin({
+          terserOptions: {
+            output: {
+              ascii_only: false,
+              utf8: true,
+            },
+          },
+        }),
+      ]
     }
     return config
   }
