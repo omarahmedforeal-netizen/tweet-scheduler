@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-// i18n will be loaded at runtime to prevent minifier from escaping Arabic text
-type I18nStrings = Record<string, string>;
+
+// i18n loaded at runtime via fetch to prevent Next.js minifier from escaping Arabic
+type I18nStrings = Record<string, string>
+const FALLBACK_I18N: I18nStrings = {}
 
 // ==================== TYPES ====================
 interface ScheduledTweet {
@@ -32,7 +34,6 @@ interface ThreadItem {
 }
 
 // ==================== CONSTANTS ====================
-// LANGUAGES defined inside Home() (uses i18n from JSON.parse)
 
 const CHAR_LIMIT = 280
 type FilterTab = 'all' | 'pending' | 'posted' | 'failed'
@@ -91,16 +92,9 @@ const MinusIcon = () => (
 
 // ==================== MAIN COMPONENT ====================
 export default function Home() {
-  // --- i18n: JSON.parse at runtime prevents minifier from escaping Arabic ---
-  const i18n: I18nStrings = JSON.parse('{"langSaudi":"السعودية","langEgyptian":"المصرية","langStandard":"الفصحى","fetchFailed":"فشل جلب التغريدة","fetchSuccess":"تم جلب التغريدة بنجاح","unexpectedError":"حدث خطأ غير متوقع","translateFailed":"فشل الترجمة","translateSuccess":"تمت الترجمة بنجاح","translateError":"حدث خطأ في الترجمة","threadTranslateSuccess":"تمت ترجمة الثريد بنجاح","specifyPublishTime":"يرجى تحديد وقت النشر","threadNeedsTwoTweets":"الثريد يحتاج تغريدتين على الأقل","scheduleFailed":"فشل الجدولة","scheduleError":"حدث خطأ في الجدولة","noTextToSchedule":"لا يوجد نص للجدولة","scheduleSuccess":"تم جدولة التغريدة بنجاح!","publishFailed":"فشل النشر","publishSuccess":"تم نشر التغريدة بنجاح!","deleteFailed":"فشل الحذف","deleteSuccess":"تم حذف التغريدة","editFailed":"فشل التعديل","editSuccess":"تم تعديل التغريدة بنجاح","confirmPublish":"تأكيد النشر","confirmPublishMessage":"هل أنت متأكد أنك تريد نشر هذه التغريدة الآن؟","confirmDelete":"تأكيد الحذف","confirmDeleteMessage":"هل أنت متأكد أنك تريد حذف هذه التغريدة؟","yesPublish":"نعم، انشر","yesDelete":"نعم، احذف","cancel":"إلغاء","editTweet":"تعديل التغريدة","textLabel":"النص","publishTimeLabel":"وقت النشر","saveChanges":"حفظ التعديلات","saving":"جاري الحفظ...","pageTitle":"مجدول التغريدات","pageSubtitle":"جلب · ترجمة · جدولة","lightMode":"الوضع الفاتح","darkMode":"الوضع الداكن","all":"الكل","pending":"قيد الانتظار","published":"نُشرت","failed":"فشلت","fetchFromUrl":"جلب من رابط","directWrite":"كتابة مباشرة","thread":"ثريد","tweetUrl":"رابط التغريدة","fetch":"جلب","originalText":"النص الأصلي","writeYourTweet":"اكتب تغريدتك","writeTweetPlaceholder":"اكتب نص التغريدة هنا...","addTweet":"إضافة تغريدة","tweetNumber":"التغريدة","translationLanguage":"لغة الترجمة","translate":"ترجمة","translating":"جاري الترجمة...","translatedText":"النص المترجم","charLimitExceeded":"تجاوز الحد الأقصى","charUnit":"حرف","publishTime":"وقت النشر","scheduling":"جاري الجدولة...","schedulePublish":"جدولة النشر","scheduleThread":"جدولة الثريد","tweetsUnit":"تغريدات","scheduledTweets":"التغريدات المجدولة","tweetUnit":"تغريدة","searchPlaceholder":"بحث في التغريدات...","noSearchResults":"لا توجد نتائج للبحث","noTweets":"لا توجد تغريدات مجدولة بعد","statusPublished":"نُشر","statusFailed":"فشل","statusPending":"قيد الانتظار","edit":"تعديل","publishNow":"نشر الآن","delete":"حذف","source":"المصدر","builtWith":"مبني بـ Next.js 14","selected":"محدد","publishSelected":"نشر المحدد","deleteSelected":"حذف المحدد","scheduledThreadOf":"تم جدولة ثريد من","publishedThreadOf":"تم نشر ثريد","deletedCount":"تم حذف","publishedCount":"تم نشر"}');
-
-  const LANGUAGES = [
-    { value: 'saudi', label: i18n.langSaudi },
-    { value: 'egyptian', label: i18n.langEgyptian },
-    { value: 'standard', label: i18n.langStandard },
-    { value: 'english', label: 'English' },
-    { value: 'french', label: 'Français' },
-  ];
+  // --- i18n (loaded at runtime to avoid minifier unicode escaping) ---
+  const [i18n, setI18n] = useState<I18nStrings>(FALLBACK_I18N)
+  const [i18nReady, setI18nReady] = useState(false)
 
   // --- Theme ---
   const [isDark, setIsDark] = useState(true)
@@ -153,6 +147,25 @@ export default function Home() {
   // --- Bulk selection ---
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [loadingBulk, setLoadingBulk] = useState(false)
+
+  // ==================== I18N LOADING ====================
+  const LANGUAGES = useMemo(() => [
+    { value: 'saudi', label: i18n.langSaudi || 'السعودية' },
+    { value: 'egyptian', label: i18n.langEgyptian || 'المصرية' },
+    { value: 'standard', label: i18n.langStandard || 'الفصحى' },
+    { value: 'english', label: 'English' },
+    { value: 'french', label: 'Français' },
+  ], [i18n])
+
+  useEffect(() => {
+    fetch('/i18n.json')
+      .then(res => res.json())
+      .then((data: I18nStrings) => {
+        setI18n(data)
+        setI18nReady(true)
+      })
+      .catch(() => setI18nReady(true))
+  }, [])
 
   // ==================== THEME ====================
   useEffect(() => {
@@ -580,6 +593,14 @@ export default function Home() {
   const sourceText = inputMode === 'fetch' ? fetchedText : directText
 
   // ==================== RENDER ====================
+  if (!i18nReady) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <Spinner size="w-8 h-8" />
+      </main>
+    )
+  }
+
   return (
     <main className="min-h-screen py-6 px-4 sm:py-8">
       {/* Background orbs */}
