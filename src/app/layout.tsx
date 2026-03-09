@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'مجدول التغريدات | Tweet Scheduler',
   description: 'جدول تغريداتك بالعربية بسهولة',
   icons: {
-    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">\uD83D\uDC26</text></svg>',
+    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">&#128038;</text></svg>',
   },
 }
 
