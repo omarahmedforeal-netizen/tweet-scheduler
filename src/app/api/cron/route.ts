@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { runScheduler } from '@/lib/scheduler'
 
-// This endpoint can be called by an external cron service (e.g. Vercel Cron, cron-job.org)
-// Add a secret to protect it: GET /api/cron?secret=YOUR_CRON_SECRET
 export async function GET(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get('secret')
   const expectedSecret = process.env.CRON_SECRET
