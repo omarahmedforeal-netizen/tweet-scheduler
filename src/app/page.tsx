@@ -31,11 +31,11 @@ interface ThreadItem {
 
 // ==================== CONSTANTS ====================
 const LANGUAGES = [
-  { value: 'saudi', label: '\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629' },
-  { value: 'egyptian', label: '\u0627\u0644\u0645\u0635\u0631\u064A\u0629' },
-  { value: 'standard', label: '\u0627\u0644\u0641\u0635\u062D\u0649' },
+  { value: 'saudi', label: 'السعودية' },
+  { value: 'egyptian', label: 'المصرية' },
+  { value: 'standard', label: 'الفصحى' },
   { value: 'english', label: 'English' },
-  { value: 'french', label: 'Fran\u00E7ais' },
+  { value: 'french', label: 'Français' },
 ]
 
 const CHAR_LIMIT = 280
@@ -250,12 +250,12 @@ export default function Home() {
         body: JSON.stringify({ url: tweetUrl.trim() }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u062C\u0644\u0628 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629')
+      if (!res.ok) throw new Error(data.error || 'فشل جلب التغريدة')
       setFetchedText(data.text)
-      addToast('\u062A\u0645 \u062C\u0644\u0628 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 \u0628\u0646\u062C\u0627\u062D', 'success')
+      addToast('تم جلب التغريدة بنجاح', 'success')
       await handleTranslate(data.text)
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u062D\u062F\u062B \u062E\u0637\u0623 \u063A\u064A\u0631 \u0645\u062A\u0648\u0642\u0639'
+      const msg = err instanceof Error ? err.message : 'حدث خطأ غير متوقع'
       setFetchError(msg)
       addToast(msg, 'error')
     } finally {
@@ -275,11 +275,11 @@ export default function Home() {
         body: JSON.stringify({ text: textToTranslate, language }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062A\u0631\u062C\u0645\u0629')
+      if (!res.ok) throw new Error(data.error || 'فشل الترجمة')
       setTranslatedText(data.translated)
-      addToast('\u062A\u0645\u062A \u0627\u0644\u062A\u0631\u062C\u0645\u0629 \u0628\u0646\u062C\u0627\u062D', 'success')
+      addToast('تمت الترجمة بنجاح', 'success')
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u062A\u0631\u062C\u0645\u0629'
+      const msg = err instanceof Error ? err.message : 'حدث خطأ في الترجمة'
       setTranslateError(msg)
       addToast(msg, 'error')
     } finally {
@@ -302,13 +302,13 @@ export default function Home() {
           body: JSON.stringify({ text: src, language }),
         })
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062A\u0631\u062C\u0645\u0629')
+        if (!res.ok) throw new Error(data.error || 'فشل الترجمة')
         newItems[i] = { ...newItems[i], text: data.translated }
       }
       setThreadItems(newItems)
-      addToast('\u062A\u0645\u062A \u062A\u0631\u062C\u0645\u0629 \u0627\u0644\u062B\u0631\u064A\u062F \u0628\u0646\u062C\u0627\u062D', 'success')
+      addToast('تمت ترجمة الثريد بنجاح', 'success')
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u062A\u0631\u062C\u0645\u0629'
+      const msg = err instanceof Error ? err.message : 'حدث خطأ في الترجمة'
       setTranslateError(msg)
       addToast(msg, 'error')
     } finally {
@@ -318,7 +318,7 @@ export default function Home() {
 
   const handleSchedule = async () => {
     if (!scheduledAt) {
-      setScheduleError('\u064A\u0631\u062C\u0649 \u062A\u062D\u062F\u064A\u062F \u0648\u0642\u062A \u0627\u0644\u0646\u0634\u0631')
+      setScheduleError('يرجى تحديد وقت النشر')
       return
     }
 
@@ -326,7 +326,7 @@ export default function Home() {
     if (isThreadMode) {
       const validItems = threadItems.filter(item => item.text.trim())
       if (validItems.length < 2) {
-        setScheduleError('\u0627\u0644\u062B\u0631\u064A\u062F \u064A\u062D\u062A\u0627\u062C \u062A\u063A\u0631\u064A\u062F\u062A\u064A\u0646 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644')
+        setScheduleError('الثريد يحتاج تغريدتين على الأقل')
         return
       }
       setLoadingSchedule(true)
@@ -342,14 +342,14 @@ export default function Home() {
           }),
         })
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062C\u062F\u0648\u0644\u0629')
-        addToast(`\u062A\u0645 \u062C\u062F\u0648\u0644\u0629 \u062B\u0631\u064A\u062F \u0645\u0646 ${validItems.length} \u062A\u063A\u0631\u064A\u062F\u0627\u062A`, 'success')
+        if (!res.ok) throw new Error(data.error || 'فشل الجدولة')
+        addToast(`تم جدولة ثريد من ${validItems.length} تغريدات`, 'success')
         setThreadItems([{ text: '', originalText: '' }])
         setIsThreadMode(false)
         await loadScheduledTweets()
         resetScheduleTime()
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : '\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u062C\u062F\u0648\u0644\u0629'
+        const msg = err instanceof Error ? err.message : 'حدث خطأ في الجدولة'
         setScheduleError(msg)
         addToast(msg, 'error')
       } finally {
@@ -360,7 +360,7 @@ export default function Home() {
 
     // Single tweet scheduling
     if (!translatedText.trim()) {
-      setScheduleError('\u0644\u0627 \u064A\u0648\u062C\u062F \u0646\u0635 \u0644\u0644\u062C\u062F\u0648\u0644\u0629')
+      setScheduleError('لا يوجد نص للجدولة')
       return
     }
     setLoadingSchedule(true)
@@ -377,8 +377,8 @@ export default function Home() {
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062C\u062F\u0648\u0644\u0629')
-      addToast('\u062A\u0645 \u062C\u062F\u0648\u0644\u0629 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 \u0628\u0646\u062C\u0627\u062D!', 'success')
+      if (!res.ok) throw new Error(data.error || 'فشل الجدولة')
+      addToast('تم جدولة التغريدة بنجاح!', 'success')
       setTweetUrl('')
       setFetchedText('')
       setDirectText('')
@@ -386,7 +386,7 @@ export default function Home() {
       await loadScheduledTweets()
       resetScheduleTime()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u062C\u062F\u0648\u0644\u0629'
+      const msg = err instanceof Error ? err.message : 'حدث خطأ في الجدولة'
       setScheduleError(msg)
       addToast(msg, 'error')
     } finally {
@@ -411,15 +411,15 @@ export default function Home() {
         body: JSON.stringify({ id }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u0646\u0634\u0631')
+      if (!res.ok) throw new Error(data.error || 'فشل النشر')
       if (data.thread) {
-        addToast(`\u062A\u0645 \u0646\u0634\u0631 \u062B\u0631\u064A\u062F (${data.posted}/${data.total})`, 'success')
+        addToast(`تم نشر ثريد (${data.posted}/${data.total})`, 'success')
       } else {
-        addToast('\u062A\u0645 \u0646\u0634\u0631 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 \u0628\u0646\u062C\u0627\u062D!', 'success')
+        addToast('تم نشر التغريدة بنجاح!', 'success')
       }
       await loadScheduledTweets()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u0641\u0634\u0644 \u0627\u0644\u0646\u0634\u0631'
+      const msg = err instanceof Error ? err.message : 'فشل النشر'
       addToast(msg, 'error')
     } finally {
       setLoadingPost(null)
@@ -436,12 +436,12 @@ export default function Home() {
         body: JSON.stringify({ id }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062D\u0630\u0641')
-      addToast('\u062A\u0645 \u062D\u0630\u0641 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629', 'info')
+      if (!res.ok) throw new Error(data.error || 'فشل الحذف')
+      addToast('تم حذف التغريدة', 'info')
       setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n })
       await loadScheduledTweets()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u0641\u0634\u0644 \u0627\u0644\u062D\u0630\u0641'
+      const msg = err instanceof Error ? err.message : 'فشل الحذف'
       addToast(msg, 'error')
     } finally {
       setLoadingDelete(null)
@@ -471,12 +471,12 @@ export default function Home() {
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062A\u0639\u062F\u064A\u0644')
-      addToast('\u062A\u0645 \u062A\u0639\u062F\u064A\u0644 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 \u0628\u0646\u062C\u0627\u062D', 'success')
+      if (!res.ok) throw new Error(data.error || 'فشل التعديل')
+      addToast('تم تعديل التغريدة بنجاح', 'success')
       setEditingTweet(null)
       await loadScheduledTweets()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '\u0641\u0634\u0644 \u0627\u0644\u062A\u0639\u062F\u064A\u0644'
+      const msg = err instanceof Error ? err.message : 'فشل التعديل'
       addToast(msg, 'error')
     } finally {
       setLoadingEdit(false)
@@ -503,12 +503,12 @@ export default function Home() {
         body: JSON.stringify({ ids: Array.from(selectedIds) }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u062D\u0630\u0641')
-      addToast(`\u062A\u0645 \u062D\u0630\u0641 ${data.deleted} \u062A\u063A\u0631\u064A\u062F\u0629`, 'info')
+      if (!res.ok) throw new Error(data.error || 'فشل الحذف')
+      addToast(`تم حذف ${data.deleted} تغريدة`, 'info')
       setSelectedIds(new Set())
       await loadScheduledTweets()
     } catch (err: unknown) {
-      addToast(err instanceof Error ? err.message : '\u0641\u0634\u0644 \u0627\u0644\u062D\u0630\u0641', 'error')
+      addToast(err instanceof Error ? err.message : 'فشل الحذف', 'error')
     } finally {
       setLoadingBulk(false)
     }
@@ -524,12 +524,12 @@ export default function Home() {
         body: JSON.stringify({ bulk: true, ids: Array.from(selectedIds) }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || '\u0641\u0634\u0644 \u0627\u0644\u0646\u0634\u0631')
-      addToast(`\u062A\u0645 \u0646\u0634\u0631 ${data.posted} \u062A\u063A\u0631\u064A\u062F\u0629`, 'success')
+      if (!res.ok) throw new Error(data.error || 'فشل النشر')
+      addToast(`تم نشر ${data.posted} تغريدة`, 'success')
       setSelectedIds(new Set())
       await loadScheduledTweets()
     } catch (err: unknown) {
-      addToast(err instanceof Error ? err.message : '\u0641\u0634\u0644 \u0627\u0644\u0646\u0634\u0631', 'error')
+      addToast(err instanceof Error ? err.message : 'فشل النشر', 'error')
     } finally {
       setLoadingBulk(false)
     }
@@ -598,7 +598,7 @@ export default function Home() {
             dir="rtl"
           >
             <div className="flex items-center gap-2 text-sm font-medium">
-              <span>{toast.type === 'success' ? '\u2713' : toast.type === 'error' ? '\u2717' : '\u2139'}</span>
+              <span>{toast.type === 'success' ? '✓' : toast.type === 'error' ? '✗' : 'ℹ'}</span>
               <span>{toast.message}</span>
             </div>
           </div>
@@ -611,14 +611,14 @@ export default function Home() {
       {confirmPostId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--modal-overlay)' }}>
           <div className="glass rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl animate-modal-in">
-            <h3 className="text-lg font-bold mb-3">\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u0646\u0634\u0631</h3>
-            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0647\u0644 \u0623\u0646\u062A \u0645\u062A\u0623\u0643\u062F \u0623\u0646\u0643 \u062A\u0631\u064A\u062F \u0646\u0634\u0631 \u0647\u0630\u0647 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 \u0627\u0644\u0622\u0646\u061F</p>
+            <h3 className="text-lg font-bold mb-3">تأكيد النشر</h3>
+            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>هل أنت متأكد أنك تريد نشر هذه التغريدة الآن؟</p>
             <div className="flex gap-3">
               <button onClick={() => handlePostNow(confirmPostId)} className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all text-sm">
-                \u0646\u0639\u0645\u060C \u0627\u0646\u0634\u0631
+                نعم، انشر
               </button>
               <button onClick={() => setConfirmPostId(null)} className="flex-1 py-2.5 glass glass-hover font-medium rounded-xl transition-all text-sm">
-                \u0625\u0644\u063A\u0627\u0621
+                إلغاء
               </button>
             </div>
           </div>
@@ -629,14 +629,14 @@ export default function Home() {
       {confirmDeleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--modal-overlay)' }}>
           <div className="glass rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl animate-modal-in">
-            <h3 className="text-lg font-bold mb-3">\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0630\u0641</h3>
-            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0647\u0644 \u0623\u0646\u062A \u0645\u062A\u0623\u0643\u062F \u0623\u0646\u0643 \u062A\u0631\u064A\u062F \u062D\u0630\u0641 \u0647\u0630\u0647 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629\u061F</p>
+            <h3 className="text-lg font-bold mb-3">تأكيد الحذف</h3>
+            <p className="text-sm mb-5" style={{ color: 'rgb(var(--foreground-secondary))' }}>هل أنت متأكد أنك تريد حذف هذه التغريدة؟</p>
             <div className="flex gap-3">
               <button onClick={() => handleDelete(confirmDeleteId)} className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all text-sm">
-                \u0646\u0639\u0645\u060C \u0627\u062D\u0630\u0641
+                نعم، احذف
               </button>
               <button onClick={() => setConfirmDeleteId(null)} className="flex-1 py-2.5 glass glass-hover font-medium rounded-xl transition-all text-sm">
-                \u0625\u0644\u063A\u0627\u0621
+                إلغاء
               </button>
             </div>
           </div>
@@ -648,10 +648,10 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'var(--modal-overlay)' }}>
           <div className="glass rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl animate-modal-in">
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <EditIcon /> \u062A\u0639\u062F\u064A\u0644 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629
+              <EditIcon /> تعديل التغريدة
             </h3>
             <div className="mb-4">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0627\u0644\u0646\u0635</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>النص</label>
               <textarea
                 value={editText}
                 onChange={e => setEditText(e.target.value)}
@@ -666,7 +666,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mb-5">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0648\u0642\u062A \u0627\u0644\u0646\u0634\u0631</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>وقت النشر</label>
               <input
                 type="datetime-local"
                 value={editTime}
@@ -680,10 +680,10 @@ export default function Home() {
                 disabled={loadingEdit || editText.length > CHAR_LIMIT || !editText.trim()}
                 className="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2"
               >
-                {loadingEdit ? <><Spinner /> \u062C\u0627\u0631\u064A \u0627\u0644\u062D\u0641\u0638...</> : '\u062D\u0641\u0638 \u0627\u0644\u062A\u0639\u062F\u064A\u0644\u0627\u062A'}
+                {loadingEdit ? <><Spinner /> جاري الحفظ...</> : 'حفظ التعديلات'}
               </button>
               <button onClick={() => setEditingTweet(null)} className="flex-1 py-2.5 glass glass-hover font-medium rounded-xl transition-all text-sm">
-                \u0625\u0644\u063A\u0627\u0621
+                إلغاء
               </button>
             </div>
           </div>
@@ -700,15 +700,15 @@ export default function Home() {
               <span className="text-2xl sm:text-3xl">&#128038;</span>
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold">\u0645\u062C\u062F\u0648\u0644 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0627\u062A</h1>
-              <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u062C\u0644\u0628 &middot; \u062A\u0631\u062C\u0645\u0629 &middot; \u062C\u062F\u0648\u0644\u0629</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">مجدول التغريدات</h1>
+              <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>جلب &middot; ترجمة &middot; جدولة</p>
             </div>
           </div>
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="p-2.5 rounded-xl glass glass-hover transition-all"
-            title={isDark ? '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062A\u062D' : '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062F\u0627\u0643\u0646'}
+            title={isDark ? 'الوضع الفاتح' : 'الوضع الداكن'}
           >
             {isDark ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -719,19 +719,19 @@ export default function Home() {
           <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-6 animate-slide-up">
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{stats.total}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0627\u0644\u0643\u0644</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>الكل</div>
             </div>
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold text-yellow-500">{stats.pending}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0642\u064A\u062F \u0627\u0644\u0627\u0646\u062A\u0638\u0627\u0631</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>قيد الانتظار</div>
             </div>
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold text-green-500">{stats.posted}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0646\u064F\u0634\u0631\u062A</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>نُشرت</div>
             </div>
             <div className="glass rounded-xl p-3 text-center">
               <div className="text-lg sm:text-2xl font-bold text-red-500">{stats.failed}</div>
-              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0641\u0634\u0644\u062A</div>
+              <div className="text-xs mt-1" style={{ color: 'rgb(var(--foreground-secondary))' }}>فشلت</div>
             </div>
           </div>
         )}
@@ -751,7 +751,7 @@ export default function Home() {
                     : 'hover:bg-white/10'
                 }`}
               >
-                \u062C\u0644\u0628 \u0645\u0646 \u0631\u0627\u0628\u0637
+                جلب من رابط
               </button>
               <button
                 onClick={() => { setInputMode('write'); setIsThreadMode(false) }}
@@ -761,7 +761,7 @@ export default function Home() {
                     : 'hover:bg-white/10'
                 }`}
               >
-                \u0643\u062A\u0627\u0628\u0629 \u0645\u0628\u0627\u0634\u0631\u0629
+                كتابة مباشرة
               </button>
               <button
                 onClick={() => { setIsThreadMode(true); setInputMode('write') }}
@@ -771,7 +771,7 @@ export default function Home() {
                     : 'hover:bg-white/10'
                 }`}
               >
-                \u062B\u0631\u064A\u062F
+                ثريد
               </button>
             </div>
           </div>
@@ -780,7 +780,7 @@ export default function Home() {
           {inputMode === 'fetch' && !isThreadMode && (
             <div className="animate-fade-in">
               <div className="mb-4">
-                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0631\u0627\u0628\u0637 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629</label>
+                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>رابط التغريدة</label>
                 <div className="flex gap-2 sm:gap-3">
                   <input
                     type="url"
@@ -796,7 +796,7 @@ export default function Home() {
                     disabled={loadingFetch || !tweetUrl.trim()}
                     className="px-4 sm:px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 whitespace-nowrap text-sm"
                   >
-                    {loadingFetch ? <Spinner /> : '\u062C\u0644\u0628'}
+                    {loadingFetch ? <Spinner /> : 'جلب'}
                   </button>
                 </div>
                 {fetchError && <p className="mt-2 text-red-400 text-sm">&#9888; {fetchError}</p>}
@@ -804,7 +804,7 @@ export default function Home() {
 
               {fetchedText && (
                 <div className="mb-4 animate-slide-up">
-                  <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0627\u0644\u0646\u0635 \u0627\u0644\u0623\u0635\u0644\u064A</label>
+                  <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>النص الأصلي</label>
                   <div className="p-4 rounded-xl" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
                     <p className="text-sm leading-relaxed" dir="auto">{fetchedText}</p>
                   </div>
@@ -817,12 +817,12 @@ export default function Home() {
           {inputMode === 'write' && !isThreadMode && (
             <div className="animate-fade-in">
               <div className="mb-4">
-                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0627\u0643\u062A\u0628 \u062A\u063A\u0631\u064A\u062F\u062A\u0643</label>
+                <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>اكتب تغريدتك</label>
                 <textarea
                   value={directText}
                   onChange={e => setDirectText(e.target.value)}
                   rows={4}
-                  placeholder="\u0627\u0643\u062A\u0628 \u0646\u0635 \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 \u0647\u0646\u0627..."
+                  placeholder="اكتب نص التغريدة هنا..."
                   className="w-full input-field rounded-xl px-4 py-3 text-sm leading-relaxed resize-none placeholder-gray-500"
                   dir="rtl"
                 />
@@ -864,7 +864,7 @@ export default function Home() {
                         value={item.text}
                         onChange={e => updateThreadItem(index, 'text', e.target.value)}
                         rows={3}
-                        placeholder={`\u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0629 ${index + 1}...`}
+                        placeholder={`التغريدة ${index + 1}...`}
                         className="w-full bg-transparent text-sm leading-relaxed resize-none focus:outline-none placeholder-gray-500"
                         dir="rtl"
                       />
@@ -877,7 +877,7 @@ export default function Home() {
                 className="w-full py-2.5 rounded-xl border-2 border-dashed transition-all flex items-center justify-center gap-2 text-sm font-medium hover:border-indigo-500/50 hover:bg-indigo-500/5"
                 style={{ borderColor: 'var(--glass-border)', color: 'rgb(var(--foreground-secondary))' }}
               >
-                <PlusIcon /> \u0625\u0636\u0627\u0641\u0629 \u062A\u063A\u0631\u064A\u062F\u0629
+                <PlusIcon /> إضافة تغريدة
               </button>
             </div>
           )}
@@ -885,7 +885,7 @@ export default function Home() {
           {/* ===== LANGUAGE SELECTOR ===== */}
           {(hasSourceText || isThreadMode) && (
             <div className="mt-4 mb-4 animate-slide-up">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0644\u063A\u0629 \u0627\u0644\u062A\u0631\u062C\u0645\u0629</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>لغة الترجمة</label>
               <div className="flex gap-2 flex-wrap">
                 {LANGUAGES.map(lang => (
                   <button
@@ -908,7 +908,7 @@ export default function Home() {
                 disabled={loadingTranslate || (isThreadMode ? threadItems.every(i => !i.text.trim()) : !sourceText.trim())}
                 className="mt-3 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all text-sm flex items-center gap-2"
               >
-                {loadingTranslate ? <><Spinner /> \u062C\u0627\u0631\u064A \u0627\u0644\u062A\u0631\u062C\u0645\u0629...</> : '\u062A\u0631\u062C\u0645\u0629'}
+                {loadingTranslate ? <><Spinner /> جاري الترجمة...</> : 'ترجمة'}
               </button>
               {translateError && <p className="mt-2 text-red-400 text-sm">&#9888; {translateError}</p>}
             </div>
@@ -918,7 +918,7 @@ export default function Home() {
           {!isThreadMode && (loadingTranslate || translatedText) && (
             <div className="mb-4 animate-slide-up">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0627\u0644\u0646\u0635 \u0627\u0644\u0645\u062A\u0631\u062C\u0645</label>
+                <label className="text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>النص المترجم</label>
                 {!loadingTranslate && translatedText && (
                   <span className={`text-xs font-mono ${charOver ? 'text-red-400' : charCount > CHAR_LIMIT * 0.9 ? 'text-yellow-400' : 'text-gray-500'}`}>
                     {charCount}/{CHAR_LIMIT}
@@ -928,7 +928,7 @@ export default function Home() {
               <div className={`rounded-xl p-4 ${charOver ? 'border-red-500/40' : ''}`} style={{ background: 'var(--card-bg)', border: `1px solid ${charOver ? 'rgba(239,68,68,0.4)' : 'var(--card-border)'}` }}>
                 {loadingTranslate ? (
                   <div className="flex items-center gap-3 text-sm" style={{ color: 'rgb(var(--foreground-secondary))' }}>
-                    <Spinner size="w-4 h-4" /> \u062C\u0627\u0631\u064A \u0627\u0644\u062A\u0631\u062C\u0645\u0629...
+                    <Spinner size="w-4 h-4" /> جاري الترجمة...
                   </div>
                 ) : (
                   <textarea
@@ -940,14 +940,14 @@ export default function Home() {
                   />
                 )}
               </div>
-              {charOver && <p className="mt-1 text-red-400 text-xs">\u062A\u062C\u0627\u0648\u0632 \u0627\u0644\u062D\u062F \u0627\u0644\u0623\u0642\u0635\u0649 ({CHAR_LIMIT} \u062D\u0631\u0641)</p>}
+              {charOver && <p className="mt-1 text-red-400 text-xs">تجاوز الحد الأقصى ({CHAR_LIMIT} حرف)</p>}
             </div>
           )}
 
           {/* ===== SCHEDULE TIME ===== */}
           {((translatedText && !loadingTranslate && !isThreadMode) || (isThreadMode && threadItems.some(i => i.text.trim()))) && (
             <div className="mb-5 animate-slide-up">
-              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>\u0648\u0642\u062A \u0627\u0644\u0646\u0634\u0631</label>
+              <label className="block text-sm mb-2" style={{ color: 'rgb(var(--foreground-secondary))' }}>وقت النشر</label>
               <input
                 type="datetime-local"
                 value={scheduledAt}
@@ -967,8 +967,8 @@ export default function Home() {
                 className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-600/25 text-base"
               >
                 {loadingSchedule ? (
-                  <span className="flex items-center justify-center gap-2"><Spinner size="w-5 h-5" /> \u062C\u0627\u0631\u064A \u0627\u0644\u062C\u062F\u0648\u0644\u0629...</span>
-                ) : isThreadMode ? `\u062C\u062F\u0648\u0644\u0629 \u0627\u0644\u062B\u0631\u064A\u062F (${threadItems.filter(i => i.text.trim()).length} \u062A\u063A\u0631\u064A\u062F\u0627\u062A)` : '\u062C\u062F\u0648\u0644\u0629 \u0627\u0644\u0646\u0634\u0631'}
+                  <span className="flex items-center justify-center gap-2"><Spinner size="w-5 h-5" /> جاري الجدولة...</span>
+                ) : isThreadMode ? `جدولة الثريد (${threadItems.filter(i => i.text.trim()).length} تغريدات)` : 'جدولة النشر'}
               </button>
             </div>
           )}
@@ -979,10 +979,10 @@ export default function Home() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2">
               <span className="w-1 h-6 bg-gradient-to-b from-purple-400 to-pink-500 rounded-full"></span>
-              \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0627\u062A \u0627\u0644\u0645\u062C\u062F\u0648\u0644\u0629
+              التغريدات المجدولة
             </h2>
             <span className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--card-bg)', color: 'rgb(var(--foreground-secondary))' }}>
-              {filteredTweets.length} \u062A\u063A\u0631\u064A\u062F\u0629
+              {filteredTweets.length} تغريدة
             </span>
           </div>
 
@@ -996,7 +996,7 @@ export default function Home() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="\u0628\u062D\u062B \u0641\u064A \u0627\u0644\u062A\u063A\u0631\u064A\u062F\u0627\u062A..."
+                placeholder="بحث في التغريدات..."
                 className="w-full input-field rounded-xl pr-10 pl-4 py-2.5 text-sm placeholder-gray-500"
                 dir="rtl"
               />
@@ -1005,7 +1005,7 @@ export default function Home() {
 
           {/* Filter Tabs */}
           <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-            {([['all', '\u0627\u0644\u0643\u0644'], ['pending', '\u0642\u064A\u062F \u0627\u0644\u0627\u0646\u062A\u0638\u0627\u0631'], ['posted', '\u0646\u064F\u0634\u0631\u062A'], ['failed', '\u0641\u0634\u0644\u062A']] as [FilterTab, string][]).map(([tab, label]) => (
+            {([['all', 'الكل'], ['pending', 'قيد الانتظار'], ['posted', 'نُشرت'], ['failed', 'فشلت']] as [FilterTab, string][]).map(([tab, label]) => (
               <button
                 key={tab}
                 onClick={() => setFilterTab(tab)}
@@ -1034,7 +1034,7 @@ export default function Home() {
             <div className="text-center py-12">
               <div className="text-5xl mb-3">&#128235;</div>
               <p style={{ color: 'rgb(var(--foreground-secondary))' }}>
-                {searchQuery ? '\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C \u0644\u0644\u0628\u062D\u062B' : '\u0644\u0627 \u062A\u0648\u062C\u062F \u062A\u063A\u0631\u064A\u062F\u0627\u062A \u0645\u062C\u062F\u0648\u0644\u0629 \u0628\u0639\u062F'}
+                {searchQuery ? 'لا توجد نتائج للبحث' : 'لا توجد تغريدات مجدولة بعد'}
               </p>
             </div>
           ) : (
@@ -1061,7 +1061,7 @@ export default function Home() {
                         <div className="flex items-center gap-1.5 shrink-0">
                           {tweet.isThread && (
                             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-                              \u062B\u0631\u064A\u062F {(tweet.threadIndex || 0) + 1}
+                              ثريد {(tweet.threadIndex || 0) + 1}
                             </span>
                           )}
                           <span className={`text-xs px-2 py-1 rounded-full font-medium ${
@@ -1069,9 +1069,9 @@ export default function Home() {
                             : tweet.status === 'failed' ? 'status-failed'
                             : 'status-pending'
                           }`}>
-                            {tweet.status === 'posted' ? '\u2713 \u0646\u064F\u0634\u0631'
-                            : tweet.status === 'failed' ? '\u2717 \u0641\u0634\u0644'
-                            : '\u231B \u0642\u064A\u062F \u0627\u0644\u0627\u0646\u062A\u0638\u0627\u0631'}
+                            {tweet.status === 'posted' ? '✓ نُشر'
+                            : tweet.status === 'failed' ? '✗ فشل'
+                            : '⌛ قيد الانتظار'}
                           </span>
                         </div>
                       </div>
@@ -1092,7 +1092,7 @@ export default function Home() {
                           <button
                             onClick={() => handleOpenEdit(tweet)}
                             className="text-xs px-2 py-1.5 rounded-lg transition-all text-indigo-400 hover:bg-indigo-500/20"
-                            title="\u062A\u0639\u062F\u064A\u0644"
+                            title="تعديل"
                           >
                             <EditIcon />
                           </button>
@@ -1101,7 +1101,7 @@ export default function Home() {
                             disabled={loadingPost === tweet.id}
                             className="text-xs px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-blue-400 rounded-lg transition-all disabled:opacity-50"
                           >
-                            {loadingPost === tweet.id ? <Spinner size="w-3 h-3" /> : '\u0646\u0634\u0631 \u0627\u0644\u0622\u0646'}
+                            {loadingPost === tweet.id ? <Spinner size="w-3 h-3" /> : 'نشر الآن'}
                           </button>
                         </>
                       )}
@@ -1109,7 +1109,7 @@ export default function Home() {
                         onClick={() => setConfirmDeleteId(tweet.id)}
                         disabled={loadingDelete === tweet.id}
                         className="text-xs px-2 py-1.5 bg-red-600/10 hover:bg-red-600/30 border border-red-500/20 text-red-400 rounded-lg transition-all disabled:opacity-50"
-                        title="\u062D\u0630\u0641"
+                        title="حذف"
                       >
                         {loadingDelete === tweet.id ? <Spinner size="w-3 h-3" /> : <TrashIcon />}
                       </button>
@@ -1122,7 +1122,7 @@ export default function Home() {
                           style={{ color: 'rgb(var(--foreground-secondary))' }}
                           dir="ltr"
                         >
-                          \u0627\u0644\u0645\u0635\u062F\u0631 &#x2197;
+                          المصدر &#x2197;
                         </a>
                       )}
                     </div>
@@ -1135,7 +1135,7 @@ export default function Home() {
 
         {/* Footer */}
         <p className="text-center text-xs mt-6" style={{ color: 'rgb(var(--foreground-secondary))' }}>
-          Tweet Scheduler &middot; \u0645\u0628\u0646\u064A \u0628\u0640 Next.js 14
+          Tweet Scheduler &middot; مبني بـ Next.js 14
         </p>
       </div>
 
@@ -1144,7 +1144,7 @@ export default function Home() {
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-float-up">
           <div className="glass rounded-2xl px-5 py-3 flex items-center gap-3 shadow-2xl border border-indigo-500/30">
             <span className="text-sm font-medium whitespace-nowrap">
-              {selectedIds.size} \u0645\u062D\u062F\u062F
+              {selectedIds.size} محدد
             </span>
             <div className="w-px h-6 bg-white/10" />
             <button
@@ -1153,7 +1153,7 @@ export default function Home() {
               className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2"
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
-              \u0646\u0634\u0631 \u0627\u0644\u0645\u062D\u062F\u062F
+              نشر المحدد
             </button>
             <button
               onClick={handleBulkDelete}
@@ -1161,13 +1161,13 @@ export default function Home() {
               className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:bg-gray-600 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2"
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
-              \u062D\u0630\u0641 \u0627\u0644\u0645\u062D\u062F\u062F
+              حذف المحدد
             </button>
             <button
               onClick={() => setSelectedIds(new Set())}
               className="px-3 py-2 glass glass-hover text-sm rounded-xl transition-all"
             >
-              \u0625\u0644\u063A\u0627\u0621
+              إلغاء
             </button>
           </div>
         </div>
