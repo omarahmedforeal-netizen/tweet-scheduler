@@ -23,10 +23,6 @@ function getTwitterClient(): TwitterApi | null {
   })
 }
 
-/**
- * Checks all scheduled tweets and posts any that are due.
- * Call this function from a cron endpoint or Next.js middleware.
- */
 export async function runScheduler(): Promise<{
   checked: number
   posted: number
@@ -39,7 +35,6 @@ export async function runScheduler(): Promise<{
     const tweets = await readTweets()
     const now = new Date()
 
-    // Find all pending tweets whose scheduled time has passed
     const dueTweets = tweets.filter(
       t => t.status === 'pending' && new Date(t.scheduledAt) <= now
     )
@@ -65,7 +60,6 @@ export async function runScheduler(): Promise<{
         console.log(`[Scheduler] Posting tweet id=${tweet.id}`)
         await rwClient.v2.tweet(tweet.translatedText)
 
-        // Mark as posted
         const idx = tweets.findIndex(t => t.id === tweet.id)
         if (idx !== -1) {
           tweets[idx].status = 'posted'
@@ -75,7 +69,6 @@ export async function runScheduler(): Promise<{
         result.posted++
         console.log(`[Scheduler] Posted tweet id=${tweet.id}`)
 
-        // Small delay between tweets to respect rate limits
         await new Promise(resolve => setTimeout(resolve, 1000))
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err)
@@ -92,7 +85,6 @@ export async function runScheduler(): Promise<{
       }
     }
 
-    // Save updated statuses
     await writeTweets(tweets)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
@@ -103,24 +95,15 @@ export async function runScheduler(): Promise<{
   return result
 }
 
-/**
- * Get a summary of all scheduled tweets
- */
 export async function getScheduledTweets(): Promise<ScheduledTweet[]> {
   return readTweets()
 }
 
-/**
- * Get only pending tweets
- */
 export async function getPendingTweets(): Promise<ScheduledTweet[]> {
   const tweets = await readTweets()
   return tweets.filter(t => t.status === 'pending')
 }
 
-/**
- * Delete a scheduled tweet by ID
- */
 export async function deleteScheduledTweet(id: string): Promise<boolean> {
   const tweets = await readTweets()
   const filtered = tweets.filter(t => t.id !== id)
