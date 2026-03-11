@@ -1,5 +1,13 @@
 import type { Metadata } from 'next'
+import { Tajawal } from 'next/font/google'
 import './globals.css'
+
+const tajawal = Tajawal({
+  subsets: ['arabic', 'latin'],
+  weight: ['300', '400', '500', '700', '800'],
+  display: 'swap',
+  variable: '--font-tajawal',
+})
 
 export const metadata: Metadata = {
   title: 'مجدول التغريدات | Tweet Scheduler',
@@ -15,14 +23,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={tajawal.variable} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"
-          rel="stylesheet"
-        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -38,7 +40,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-arabic antialiased">
+      <body className={`${tajawal.className} antialiased`}>
         <div className="min-h-screen">
           {children}
         </div>
