@@ -98,12 +98,13 @@ export default function Home() {
   // ==================== THEME ====================
   useEffect(() => {
     const stored = localStorage.getItem('theme')
-    if (stored === 'dark') {
-      setIsDark(true)
-      document.documentElement.classList.remove('light')
-    } else {
+    if (stored === 'light') {
       setIsDark(false)
       document.documentElement.classList.add('light')
+    } else {
+      // Default = dark
+      setIsDark(true)
+      document.documentElement.classList.remove('light')
     }
   }, [])
 
@@ -111,9 +112,11 @@ export default function Home() {
     setIsDark(prev => {
       const next = !prev
       if (next) {
+        // Switch to dark
         document.documentElement.classList.remove('light')
         localStorage.setItem('theme', 'dark')
       } else {
+        // Switch to light
         document.documentElement.classList.add('light')
         localStorage.setItem('theme', 'light')
       }
@@ -591,7 +594,7 @@ export default function Home() {
   // ==================== RENDER ====================
   if (!i18nReady) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
+      <main className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg)' }}>
         <Spinner size="w-8 h-8" />
       </main>
     )
@@ -605,7 +608,7 @@ export default function Home() {
   })
 
   return (
-    <div dir="rtl" className="flex min-h-screen bg-gray-50 font-sans">
+    <div dir="rtl" className="flex min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
@@ -629,14 +632,17 @@ export default function Home() {
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-1">
+              <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-1" style={{ color: 'var(--text)' }}>
                 \u0645\u0631\u062d\u0628\u0627\u064b\u060c \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \ud83d\udc4b
               </h1>
-              <p className="text-sm text-gray-500 mt-1">{todayFormatted}</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{todayFormatted}</p>
             </div>
             <button
               onClick={() => openNewTweetModal()}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm flex items-center gap-2"
+              className="px-4 py-2.5 text-sm font-semibold rounded-xl transition-all flex items-center gap-2"
+              style={{ backgroundColor: 'var(--accent)', color: '#fff', boxShadow: 'var(--shadow-sm)' }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--accent-hover)')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
             >
               <PlusIcon />
               <span>\u062a\u063a\u0631\u064a\u062f\u0629 \u062c\u062f\u064a\u062f\u0629</span>
@@ -663,13 +669,19 @@ export default function Home() {
           />
 
           {/* Scheduled Tweets List */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div
+            className="rounded-xl p-5"
+            style={{ backgroundColor: 'var(--bg-sidebar)', border: '1px solid var(--border)' }}
+          >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
+              <h2 className="text-base font-bold flex items-center gap-2" style={{ color: 'var(--text)' }}>
+                <span className="w-1 h-5 rounded-full" style={{ backgroundColor: 'var(--accent)' }}></span>
                 {i18n.scheduledTweets || '\u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0627\u062a \u0627\u0644\u0645\u062c\u062f\u0648\u0644\u0629'}
               </h2>
-              <span className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-500">
+              <span
+                className="text-xs px-3 py-1 rounded-full"
+                style={{ backgroundColor: 'var(--bg)', color: 'var(--text-muted)' }}
+              >
                 {filteredTweets.length} {i18n.tweetUnit || '\u062a\u063a\u0631\u064a\u062f\u0629'}
               </span>
             </div>
@@ -677,7 +689,7 @@ export default function Home() {
             {/* Search */}
             <div className="mb-4">
               <div className="relative">
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <div className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }}>
                   <SearchIcon />
                 </div>
                 <input
@@ -685,7 +697,22 @@ export default function Home() {
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder={i18n.searchPlaceholder || '\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0627\u062a...'}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pr-10 pl-4 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 transition-all"
+                  className="w-full rounded-xl pr-10 pl-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all"
+                  style={{
+                    backgroundColor: 'var(--bg)',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--border)',
+                    color: 'var(--text)',
+                  }}
+                  onFocus={e => {
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--accent-ring)'
+                    e.currentTarget.style.borderColor = 'var(--accent)'
+                  }}
+                  onBlur={e => {
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.borderColor = 'var(--border)'
+                  }}
                   dir="rtl"
                 />
               </div>
@@ -695,7 +722,7 @@ export default function Home() {
             {filteredTweets.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-4xl mb-3">\ud83d\udceb</div>
-                <p className="text-gray-400 text-sm">
+                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
                   {searchQuery ? (i18n.noSearchResults || '\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c') : (i18n.noTweets || '\u0644\u0627 \u062a\u0648\u062c\u062f \u062a\u063a\u0631\u064a\u062f\u0627\u062a \u0645\u062c\u062f\u0648\u0644\u0629')}
                 </p>
               </div>
@@ -768,14 +795,29 @@ export default function Home() {
       {/* Confirm Post Modal */}
       {confirmPostId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">{i18n.confirmPublish || '\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u0646\u0634\u0631'}</h3>
-            <p className="text-sm text-gray-500 mb-5">{i18n.confirmPublishMessage || '\u0647\u0644 \u062a\u0631\u064a\u062f \u0646\u0634\u0631 \u0647\u0630\u0647 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629 \u0627\u0644\u0622\u0646\u061f'}</p>
+          <div
+            className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
+            style={{ backgroundColor: 'var(--bg-sidebar)' }}
+          >
+            <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text)' }}>{i18n.confirmPublish || '\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u0646\u0634\u0631'}</h3>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>{i18n.confirmPublishMessage || '\u0647\u0644 \u062a\u0631\u064a\u062f \u0646\u0634\u0631 \u0647\u0630\u0647 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629 \u0627\u0644\u0622\u0646\u061f'}</p>
             <div className="flex gap-3">
-              <button onClick={() => handlePostNow(confirmPostId)} className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all text-sm">
+              <button
+                onClick={() => handlePostNow(confirmPostId)}
+                className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm"
+                style={{ backgroundColor: 'var(--accent)', color: '#fff' }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--accent-hover)')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
+              >
                 {i18n.yesPublish || '\u0646\u0639\u0645\u060c \u0627\u0646\u0634\u0631'}
               </button>
-              <button onClick={() => setConfirmPostId(null)} className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all text-sm">
+              <button
+                onClick={() => setConfirmPostId(null)}
+                className="flex-1 py-2.5 font-medium rounded-xl transition-all text-sm"
+                style={{ backgroundColor: 'var(--bg)', color: 'var(--text-secondary)' }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
+              >
                 {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
               </button>
             </div>
@@ -786,14 +828,29 @@ export default function Home() {
       {/* Confirm Delete Modal */}
       {confirmDeleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">{i18n.confirmDelete || '\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u062d\u0630\u0641'}</h3>
-            <p className="text-sm text-gray-500 mb-5">{i18n.confirmDeleteMessage || '\u0647\u0644 \u062a\u0631\u064a\u062f \u062d\u0630\u0641 \u0647\u0630\u0647 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629\u061f'}</p>
+          <div
+            className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
+            style={{ backgroundColor: 'var(--bg-sidebar)' }}
+          >
+            <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text)' }}>{i18n.confirmDelete || '\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u062d\u0630\u0641'}</h3>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>{i18n.confirmDeleteMessage || '\u0647\u0644 \u062a\u0631\u064a\u062f \u062d\u0630\u0641 \u0647\u0630\u0647 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629\u061f'}</p>
             <div className="flex gap-3">
-              <button onClick={() => handleDelete(confirmDeleteId)} className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all text-sm">
+              <button
+                onClick={() => handleDelete(confirmDeleteId)}
+                className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm"
+                style={{ backgroundColor: 'var(--error)', color: '#fff' }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#dc2626')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--error)')}
+              >
                 {i18n.yesDelete || '\u0646\u0639\u0645\u060c \u0627\u062d\u0630\u0641'}
               </button>
-              <button onClick={() => setConfirmDeleteId(null)} className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all text-sm">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="flex-1 py-2.5 font-medium rounded-xl transition-all text-sm"
+                style={{ backgroundColor: 'var(--bg)', color: 'var(--text-secondary)' }}
+                onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
+                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
+              >
                 {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
               </button>
             </div>
@@ -817,15 +874,29 @@ export default function Home() {
       {/* Bulk Action Bar */}
       {selectedIds.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-          <div className="bg-white rounded-2xl px-5 py-3 flex items-center gap-3 shadow-xl border border-gray-200">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+          <div
+            className="rounded-2xl px-5 py-3 flex items-center gap-3"
+            style={{
+              backgroundColor: 'var(--bg-sidebar)',
+              border: '1px solid var(--border)',
+              boxShadow: 'var(--shadow-xl)',
+            }}
+          >
+            <span className="text-sm font-medium whitespace-nowrap" style={{ color: 'var(--text)' }}>
               {selectedIds.size} {i18n.selected || '\u0645\u062d\u062f\u062f'}
             </span>
-            <div className="w-px h-6 bg-gray-200" />
+            <div className="w-px h-6" style={{ backgroundColor: 'var(--border)' }} />
             <button
               onClick={handleBulkPost}
               disabled={loadingBulk}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2"
+              className="px-4 py-2 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
+              style={
+                loadingBulk
+                  ? { backgroundColor: 'var(--border)', color: 'var(--text-muted)', cursor: 'not-allowed' }
+                  : { backgroundColor: 'var(--accent)', color: '#fff' }
+              }
+              onMouseEnter={e => { if (!loadingBulk) e.currentTarget.style.backgroundColor = 'var(--accent-hover)' }}
+              onMouseLeave={e => { if (!loadingBulk) e.currentTarget.style.backgroundColor = 'var(--accent)' }}
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
               {i18n.publishSelected || '\u0646\u0634\u0631 \u0627\u0644\u0645\u062d\u062f\u062f'}
@@ -833,14 +904,24 @@ export default function Home() {
             <button
               onClick={handleBulkDelete}
               disabled={loadingBulk}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white text-sm font-bold rounded-xl transition-all flex items-center gap-2"
+              className="px-4 py-2 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
+              style={
+                loadingBulk
+                  ? { backgroundColor: 'var(--border)', color: 'var(--text-muted)', cursor: 'not-allowed' }
+                  : { backgroundColor: 'var(--error)', color: '#fff' }
+              }
+              onMouseEnter={e => { if (!loadingBulk) e.currentTarget.style.backgroundColor = '#dc2626' }}
+              onMouseLeave={e => { if (!loadingBulk) e.currentTarget.style.backgroundColor = 'var(--error)' }}
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
               {i18n.deleteSelected || '\u062d\u0630\u0641 \u0627\u0644\u0645\u062d\u062f\u062f'}
             </button>
             <button
               onClick={() => setSelectedIds(new Set())}
-              className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm rounded-xl transition-all"
+              className="px-3 py-2 text-sm rounded-xl transition-all"
+              style={{ backgroundColor: 'var(--bg)', color: 'var(--text-secondary)' }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
             >
               {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
             </button>
