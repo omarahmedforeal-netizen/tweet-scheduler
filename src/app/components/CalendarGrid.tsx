@@ -100,7 +100,7 @@ export function CalendarGrid({
                     </div>
                     <button
                       onClick={() => onSlotClick(day.date, slot.hour)}
-                      className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
+                      className="w-6 h-6 rounded-md flex items-center justify-center transition-all cursor-pointer"
                       style={{
                         backgroundColor: 'var(--accent-light)',
                         color: 'var(--accent)',
