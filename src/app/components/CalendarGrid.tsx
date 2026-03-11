@@ -25,6 +25,34 @@ function truncate(text: string, max = 60) {
   return text.length > max ? text.slice(0, max) + '...' : text
 }
 
+function getTweetCardStyle(status: string): React.CSSProperties {
+  if (status === 'posted') {
+    return {
+      backgroundColor: 'color-mix(in srgb, var(--success) 10%, transparent)',
+      borderColor: 'color-mix(in srgb, var(--success) 30%, transparent)',
+      color: 'var(--success)',
+    }
+  }
+  if (status === 'failed') {
+    return {
+      backgroundColor: 'color-mix(in srgb, var(--error) 10%, transparent)',
+      borderColor: 'color-mix(in srgb, var(--error) 30%, transparent)',
+      color: 'var(--error)',
+    }
+  }
+  return {
+    backgroundColor: 'color-mix(in srgb, var(--accent) 10%, transparent)',
+    borderColor: 'color-mix(in srgb, var(--accent) 30%, transparent)',
+    color: 'var(--accent)',
+  }
+}
+
+function getStatusLabelColor(status: string): React.CSSProperties {
+  if (status === 'posted') return { color: 'var(--success)' }
+  if (status === 'failed') return { color: 'var(--error)' }
+  return { color: 'var(--accent)' }
+}
+
 export function CalendarGrid({
   calendarDays,
   getTweetsForSlot,
@@ -37,10 +65,23 @@ export function CalendarGrid({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       {calendarDays.map((day, dayIdx) => (
-        <div key={dayIdx} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div
+          key={dayIdx}
+          className="rounded-xl overflow-hidden"
+          style={{
+            backgroundColor: 'var(--bg-sidebar)',
+            border: '1px solid var(--border)',
+          }}
+        >
           {/* Column header */}
-          <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-            <h3 className="text-sm font-semibold text-gray-700">{day.label}</h3>
+          <div
+            className="px-4 py-3"
+            style={{
+              borderBottom: '1px solid var(--border-light)',
+              backgroundColor: 'var(--bg)',
+            }}
+          >
+            <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{day.label}</h3>
           </div>
           {/* Time slots */}
           <div className="p-3 space-y-2">
@@ -49,16 +90,21 @@ export function CalendarGrid({
               return (
                 <div
                   key={slot.key}
-                  className="border border-gray-100 rounded-lg p-2.5 hover:border-gray-200 transition-all"
+                  className="rounded-lg p-2.5 transition-all"
+                  style={{ border: '1px solid var(--border-light)' }}
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-2">
                       {getSlotIcon(slot)}
-                      <span className="text-xs font-medium text-gray-600" dir="ltr">{getSlotTimeLabel(slot)}</span>
+                      <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }} dir="ltr">{getSlotTimeLabel(slot)}</span>
                     </div>
                     <button
                       onClick={() => onSlotClick(day.date, slot.hour)}
-                      className="w-6 h-6 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all"
+                      className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
+                      style={{
+                        backgroundColor: 'var(--accent-light)',
+                        color: 'var(--accent)',
+                      }}
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -71,13 +117,12 @@ export function CalendarGrid({
                       {tweetsInSlot.map(tweet => (
                         <div
                           key={tweet.id}
-                          className={`text-xs p-2 rounded-md border cursor-pointer transition-all hover:shadow-sm ${
-                            tweet.status === 'posted'
-                              ? 'bg-green-50 border-green-200 text-green-700'
-                              : tweet.status === 'failed'
-                              ? 'bg-red-50 border-red-200 text-red-700'
-                              : 'bg-blue-50 border-blue-200 text-blue-700'
-                          }`}
+                          className="text-xs p-2 rounded-md cursor-pointer transition-all"
+                          style={{
+                            ...getTweetCardStyle(tweet.status),
+                            border: '1px solid',
+                            borderColor: getTweetCardStyle(tweet.status).borderColor,
+                          }}
                           onClick={() => {
                             if (tweet.status === 'pending') onEditTweet(tweet)
                           }}
@@ -87,9 +132,10 @@ export function CalendarGrid({
                             <span className="opacity-70" dir="ltr">
                               {new Date(tweet.scheduledAt).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
                             </span>
-                            <span className={`text-[10px] font-medium ${
-                              tweet.status === 'posted' ? 'text-green-600' : tweet.status === 'failed' ? 'text-red-600' : 'text-blue-600'
-                            }`}>
+                            <span
+                              className="text-[10px] font-medium"
+                              style={getStatusLabelColor(tweet.status)}
+                            >
                               {tweet.status === 'posted' ? '\u2713 \u0646\u064f\u0634\u0631' : tweet.status === 'failed' ? '\u2717 \u0641\u0634\u0644' : '\u23f3 \u0627\u0646\u062a\u0638\u0627\u0631'}
                             </span>
                           </div>
