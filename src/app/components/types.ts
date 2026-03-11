@@ -50,18 +50,18 @@ export const TIME_SLOTS: TimeSlot[] = [
   { key: '20', hour: 20, label: '20:00', icon: 'evening' },
 ]
 
-export const ARABIC_DAYS = ['\u0627\u0644\u0623\u062d\u062f', '\u0627\u0644\u0627\u062b\u0646\u064a\u0646', '\u0627\u0644\u062b\u0644\u0627\u062b\u0627\u0621', '\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621', '\u0627\u0644\u062e\u0645\u064a\u0633', '\u0627\u0644\u062c\u0645\u0639\u0629', '\u0627\u0644\u0633\u0628\u062a']
+export const ARABIC_DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']
 
-export const ARABIC_MONTHS = ['\u064a\u0646\u0627\u064a\u0631', '\u0641\u0628\u0631\u0627\u064a\u0631', '\u0645\u0627\u0631\u0633', '\u0623\u0628\u0631\u064a\u0644', '\u0645\u0627\u064a\u0648', '\u064a\u0648\u0646\u064a\u0648', '\u064a\u0648\u0644\u064a\u0648', '\u0623\u063a\u0633\u0637\u0633', '\u0633\u0628\u062a\u0645\u0628\u0631', '\u0623\u0643\u062a\u0648\u0628\u0631', '\u0646\u0648\u0641\u0645\u0628\u0631', '\u062f\u064a\u0633\u0645\u0628\u0631']
+export const ARABIC_MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
 
 export const FALLBACK_I18N: I18nStrings = {}
 
 export function buildLanguages(i18n: I18nStrings) {
   return [
-    { value: 'saudi', label: i18n.langSaudi || '\u0627\u0644\u0633\u0639\u0648\u062f\u064a\u0629' },
-    { value: 'egyptian', label: i18n.langEgyptian || '\u0627\u0644\u0645\u0635\u0631\u064a\u0629' },
-    { value: 'standard', label: i18n.langStandard || '\u0627\u0644\u0641\u0635\u062d\u0649' },
+    { value: 'saudi', label: i18n.langSaudi || 'السعودية' },
+    { value: 'egyptian', label: i18n.langEgyptian || 'المصرية' },
+    { value: 'standard', label: i18n.langStandard || 'الفصحى' },
     { value: 'english', label: 'English' },
-    { value: 'french', label: 'Fran\u00e7ais' },
+    { value: 'french', label: 'Français' },
   ]
 }
