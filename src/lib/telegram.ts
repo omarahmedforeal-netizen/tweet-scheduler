@@ -194,13 +194,13 @@ export async function notifyOwner(text: string, keyboard?: InlineKeyboardMarkup)
 
 export async function notifyTweetPosted(tweetText: string, count?: number): Promise<boolean> {
   const msg = count && count > 1
-    ? `\u2705 <b>تم نشر ${count} تغريدات بنجاح!</b>\n\n<i>آخر تغريدة:</i>\n${escapeHtml(tweetText.substring(0, 200))}${tweetText.length > 200 ? '...' : ''}`
-    : `\u2705 <b>تم نشر التغريدة بنجاح!</b>\n\n<i>${escapeHtml(tweetText.substring(0, 300))}${tweetText.length > 300 ? '...' : ''}</i>`
+    ? `\u2705 <b>\u062a\u0645 \u0646\u0634\u0631 ${count} \u062a\u063a\u0631\u064a\u062f\u0627\u062a \u0628\u0646\u062c\u0627\u062d!</b>\n\n<i>\u0622\u062e\u0631 \u062a\u063a\u0631\u064a\u062f\u0629:</i>\n${escapeHtml(tweetText.substring(0, 200))}${tweetText.length > 200 ? '...' : ''}`
+    : `\u2705 <b>\u062a\u0645 \u0646\u0634\u0631 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629 \u0628\u0646\u062c\u0627\u062d!</b>\n\n<i>${escapeHtml(tweetText.substring(0, 300))}${tweetText.length > 300 ? '...' : ''}</i>`
   return notifyOwner(msg)
 }
 
 export async function notifyTweetFailed(tweetText: string, error: string): Promise<boolean> {
-  const msg = `\u274C <b>فشل نشر التغريدة!</b>\n\n<i>${escapeHtml(tweetText.substring(0, 200))}${tweetText.length > 200 ? '...' : ''}</i>\n\n<b>السبب:</b> ${escapeHtml(error)}`
+  const msg = `\u274c <b>\u0641\u0634\u0644 \u0646\u0634\u0631 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629!</b>\n\n<i>${escapeHtml(tweetText.substring(0, 200))}${tweetText.length > 200 ? '...' : ''}</i>\n\n<b>\u0627\u0644\u0633\u0628\u0628:</b> ${escapeHtml(error)}`
   return notifyOwner(msg)
 }
 
@@ -210,15 +210,15 @@ export async function notifySchedulerRun(result: {
   failed: number
   errors: string[]
 }): Promise<boolean> {
-  if (result.checked === 0) return true // No need to notify if nothing was due
+  if (result.checked === 0) return true
 
-  let msg = `\U0001F552 <b>تقرير الجدولة التلقائية</b>\n\n`
-  msg += `\u2022 تم فحص: <b>${result.checked}</b> تغريدة\n`
-  msg += `\u2022 تم النشر: <b>${result.posted}</b>\n`
-  msg += `\u2022 فشلت: <b>${result.failed}</b>\n`
+  let msg = `\ud83d\udd52 <b>\u062a\u0642\u0631\u064a\u0631 \u0627\u0644\u062c\u062f\u0648\u0644\u0629 \u0627\u0644\u062a\u0644\u0642\u0627\u0626\u064a\u0629</b>\n\n`
+  msg += `\u2022 \u062a\u0645 \u0641\u062d\u0635: <b>${result.checked}</b> \u062a\u063a\u0631\u064a\u062f\u0629\n`
+  msg += `\u2022 \u062a\u0645 \u0627\u0644\u0646\u0634\u0631: <b>${result.posted}</b>\n`
+  msg += `\u2022 \u0641\u0634\u0644\u062a: <b>${result.failed}</b>\n`
 
   if (result.errors.length > 0) {
-    msg += `\n<b>الأخطاء:</b>\n`
+    msg += `\n<b>\u0627\u0644\u0623\u062e\u0637\u0627\u0621:</b>\n`
     result.errors.slice(0, 3).forEach(e => {
       msg += `\u2022 ${escapeHtml(e.substring(0, 100))}\n`
     })
@@ -253,9 +253,9 @@ export function formatDate(isoDate: string): string {
 
 export function formatStatus(status: string): string {
   switch (status) {
-    case 'pending': return '\u23F3 قيد الانتظار'
-    case 'posted': return '\u2705 تم النشر'
-    case 'failed': return '\u274C فشلت'
+    case 'pending': return '\u23f3 \u0642\u064a\u062f \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631'
+    case 'posted': return '\u2705 \u062a\u0645 \u0627\u0644\u0646\u0634\u0631'
+    case 'failed': return '\u274c \u0641\u0634\u0644\u062a'
     default: return status
   }
 }
