@@ -42,11 +42,11 @@ export function EditModal({
           className="text-lg font-bold mb-4 flex items-center gap-2"
           style={{ color: 'var(--text)' }}
         >
-          <EditIcon /> {i18n.editTweet || '\u062a\u0639\u062f\u064a\u0644 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629'}
+          <EditIcon /> {i18n.editTweet || 'تعديل التغريدة'}
         </h3>
         <div className="mb-4">
           <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
-            {i18n.textLabel || '\u0627\u0644\u0646\u0635'}
+            {i18n.textLabel || 'النص'}
           </label>
           <textarea
             value={editText}
@@ -81,7 +81,7 @@ export function EditModal({
         </div>
         <div className="mb-5">
           <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
-            {i18n.publishTimeLabel || '\u0648\u0642\u062a \u0627\u0644\u0646\u0634\u0631'}
+            {i18n.publishTimeLabel || 'وقت النشر'}
           </label>
           <input
             type="datetime-local"
@@ -118,7 +118,7 @@ export function EditModal({
             onMouseEnter={e => { if (!isDisabled) e.currentTarget.style.backgroundColor = 'var(--accent-hover)' }}
             onMouseLeave={e => { if (!isDisabled) e.currentTarget.style.backgroundColor = 'var(--accent)' }}
           >
-            {loadingEdit ? <><Spinner /> {i18n.saving || '\u062c\u0627\u0631\u064a \u0627\u0644\u062d\u0641\u0638...'}</> : (i18n.saveChanges || '\u062d\u0641\u0638 \u0627\u0644\u062a\u063a\u064a\u064a\u0631\u0627\u062a')}
+            {loadingEdit ? <><Spinner /> {i18n.saving || 'جاري الحفظ...'}</> : (i18n.saveChanges || 'حفظ التغييرات')}
           </button>
           <button
             onClick={onClose}
@@ -127,7 +127,7 @@ export function EditModal({
             onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
             onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
           >
-            {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
+            {i18n.cancel || 'إلغاء'}
           </button>
         </div>
       </div>
