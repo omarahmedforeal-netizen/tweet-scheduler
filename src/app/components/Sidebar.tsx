@@ -39,44 +39,59 @@ export function Sidebar({
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/30 z-40 lg:hidden"
+          className="fixed inset-0 z-40 lg:hidden"
+          style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Right Sidebar */}
       <aside
-        className={`fixed top-0 right-0 h-full w-[260px] bg-white border-l border-gray-200 z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${
+        className={`fixed top-0 right-0 h-full w-[260px] z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${
           sidebarOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{
+          backgroundColor: 'var(--bg-sidebar)',
+          borderLeft: '1px solid var(--border)',
+        }}
       >
         {/* Logo */}
         <div className="px-5 pt-6 pb-4 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: 'var(--accent)' }}
+          >
             <TwitterLogo />
           </div>
-          <span className="text-lg font-bold text-gray-900">Postlate</span>
+          <span className="text-lg font-bold" style={{ color: 'var(--text)' }}>Postlate</span>
           {/* Close button for mobile */}
           <button
             onClick={() => setSidebarOpen(false)}
-            className="mr-auto lg:hidden p-1 rounded-lg hover:bg-gray-100 text-gray-500"
+            className="mr-auto lg:hidden p-1 rounded-lg transition-all"
+            style={{ color: 'var(--text-secondary)' }}
           >
             <CloseIcon />
           </button>
         </div>
 
         {/* User Profile */}
-        <div className="px-5 py-4 border-t border-b border-gray-100">
+        <div
+          className="px-5 py-4"
+          style={{
+            borderTop: '1px solid var(--border-light)',
+            borderBottom: '1px solid var(--border-light)',
+          }}
+        >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
               \u0645
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-semibold text-gray-900">\u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645</span>
+                <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>\u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645</span>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">Pro</span>
               </div>
-              <p className="text-xs text-gray-400 truncate">user@postlate.com</p>
+              <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>user@postlate.com</p>
             </div>
           </div>
         </div>
@@ -87,31 +102,37 @@ export function Sidebar({
             <button
               key={item.key}
               onClick={() => { setActiveSection(item.key); setSidebarOpen(false) }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+              style={
                 activeSection === item.key
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-              }`}
+                  ? { backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }
+                  : { color: 'var(--text-secondary)' }
+              }
             >
-              <span className={activeSection === item.key ? 'text-blue-600' : 'text-gray-400'}>{item.icon}</span>
+              <span style={{ color: activeSection === item.key ? 'var(--accent)' : 'var(--text-muted)' }}>{item.icon}</span>
               <span>{item.fallback}</span>
             </button>
           ))}
         </nav>
 
         {/* Settings & Theme at bottom */}
-        <div className="px-3 py-4 border-t border-gray-100 space-y-1">
+        <div
+          className="px-3 py-4 space-y-1"
+          style={{ borderTop: '1px solid var(--border-light)' }}
+        >
           <button
             onClick={toggleTheme}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            <span className="text-gray-400">{isDark ? <SunIcon /> : <MoonIcon />}</span>
+            <span style={{ color: 'var(--text-muted)' }}>{isDark ? <SunIcon /> : <MoonIcon />}</span>
             <span>{isDark ? (i18n.lightMode || '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d') : (i18n.darkMode || '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062f\u0627\u0643\u0646')}</span>
           </button>
           <button
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            <span className="text-gray-400"><GearIcon /></span>
+            <span style={{ color: 'var(--text-muted)' }}><GearIcon /></span>
             <span>\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a</span>
           </button>
         </div>
@@ -127,16 +148,26 @@ export function MobileHeader({
   setSidebarOpen: (open: boolean) => void
 }) {
   return (
-    <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-30">
+    <div
+      className="lg:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30"
+      style={{
+        backgroundColor: 'var(--bg-sidebar)',
+        borderBottom: '1px solid var(--border)',
+      }}
+    >
       <div className="flex items-center gap-2">
-        <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
+        <div
+          className="w-7 h-7 rounded-lg flex items-center justify-center"
+          style={{ backgroundColor: 'var(--accent)' }}
+        >
           <TwitterLogoSmall />
         </div>
-        <span className="font-bold text-gray-900">Postlate</span>
+        <span className="font-bold" style={{ color: 'var(--text)' }}>Postlate</span>
       </div>
       <button
         onClick={() => setSidebarOpen(true)}
-        className="p-2 rounded-xl hover:bg-gray-100 text-gray-600"
+        className="p-2 rounded-xl transition-all"
+        style={{ color: 'var(--text-secondary)' }}
       >
         <MenuIcon />
       </button>
