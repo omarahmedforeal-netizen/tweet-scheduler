@@ -102,28 +102,28 @@ export function TweetCard({
                     border: '1px solid color-mix(in srgb, var(--accent) 25%, transparent)',
                   }}
                 >
-                  {i18n.thread || '\u0633\u0644\u0633\u0644\u0629'} {(tweet.threadIndex || 0) + 1}
+                  {i18n.thread || 'سلسلة'} {(tweet.threadIndex || 0) + 1}
                 </span>
               )}
               <span
                 className="text-xs px-2 py-1 rounded-full font-medium"
                 style={getStatusBadgeStyle(tweet.status)}
               >
-                {tweet.status === 'posted' ? `\u2713 ${i18n.statusPublished || '\u0646\u064f\u0634\u0631'}`
-                : tweet.status === 'failed' ? `\u2717 ${i18n.statusFailed || '\u0641\u0634\u0644'}`
-                : `\u23f3 ${i18n.statusPending || '\u0627\u0646\u062a\u0638\u0627\u0631'}`}
+                {tweet.status === 'posted' ? `✓ ${i18n.statusPublished || 'نُشر'}`
+                : tweet.status === 'failed' ? `✗ ${i18n.statusFailed || 'فشل'}`
+                : `⏳ ${i18n.statusPending || 'انتظار'}`}
               </span>
             </div>
           </div>
           {tweet.errorMessage && (
-            <p className="text-xs mt-1" style={{ color: 'var(--error)' }}>\u26a0 {tweet.errorMessage}</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--error)' }}>⚠ {tweet.errorMessage}</p>
           )}
         </div>
       </div>
 
       <div className="flex items-center justify-between mr-7">
         <div className="text-xs flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
-          <span>\ud83d\udd52</span>
+          <span>🕒</span>
           <span dir="ltr">{formatDate(tweet.scheduledAt)}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export function TweetCard({
                 onClick={() => onEdit(tweet)}
                 className="text-xs px-2 py-1.5 rounded-lg transition-all cursor-pointer"
                 style={{ color: 'var(--text-secondary)' }}
-                title={i18n.edit || '\u062a\u0639\u062f\u064a\u0644'}
+                title={i18n.edit || 'تعديل'}
               >
                 <EditIcon />
               </button>
@@ -147,7 +147,7 @@ export function TweetCard({
                   border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)',
                 }}
               >
-                {loadingPost === tweet.id ? <Spinner size="w-3 h-3" /> : (i18n.publishNow || '\u0646\u0634\u0631 \u0627\u0644\u0622\u0646')}
+                {loadingPost === tweet.id ? <Spinner size="w-3 h-3" /> : (i18n.publishNow || 'نشر الآن')}
               </button>
             </>
           )}
@@ -160,7 +160,7 @@ export function TweetCard({
               color: 'var(--error)',
               border: '1px solid color-mix(in srgb, var(--error) 30%, transparent)',
             }}
-            title={i18n.delete || '\u062d\u0630\u0641'}
+            title={i18n.delete || 'حذف'}
           >
             {loadingDelete === tweet.id ? <Spinner size="w-3 h-3" /> : <TrashIcon />}
           </button>
@@ -173,7 +173,7 @@ export function TweetCard({
               style={{ color: 'var(--text-muted)' }}
               dir="ltr"
             >
-              {i18n.source || '\u0627\u0644\u0645\u0635\u062f\u0631'} \u2197
+              {i18n.source || 'المصدر'} ↗
             </a>
           )}
         </div>
