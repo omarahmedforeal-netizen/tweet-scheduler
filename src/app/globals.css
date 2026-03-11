@@ -4,6 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    font-family: 'Tajawal', sans-serif !important;
+  }
+  *, *::before, *::after {
+    font-family: inherit !important;
+  }
+  button, [role="button"], a, input[type="submit"], input[type="button"] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
 /* ============================================
    Postlate - Light/Clean Dashboard Theme
    ============================================ */
@@ -27,6 +42,8 @@
   --success: #22c55e;
   --error: #ef4444;
   --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+  --warning-text: #b45309;
   --border: #e5e7eb;
   --border-light: #f1f5f9;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -55,6 +72,8 @@
   --success: #22c55e;
   --error: #ef4444;
   --warning: #f59e0b;
+  --warning-bg: rgba(251, 191, 36, 0.15);
+  --warning-text: #fbbf24;
   --border: #2a2a4a;
   --border-light: #1e1e38;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -77,6 +96,8 @@
   --success: #22c55e;
   --error: #ef4444;
   --warning: #f59e0b;
+  --warning-bg: rgba(251, 191, 36, 0.15);
+  --warning-text: #fbbf24;
   --border: #2a2a4a;
   --border-light: #1e1e38;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -150,6 +171,8 @@ body {
   --accent-hover: #5a52e0;
   --accent-light: rgba(108, 99, 255, 0.08);
   --accent-ring: rgba(108, 99, 255, 0.25);
+  --warning-bg: #fef3c7;
+  --warning-text: #b45309;
   --border: #e5e7eb;
   --border-light: #f1f5f9;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
