@@ -1,6 +1,7 @@
 import { TwitterApi } from 'twitter-api-v2'
 import type { ScheduledTweet } from './types'
 import { readTweets, writeTweets } from './data'
+import { notifyTweetPosted, notifyTweetFailed, notifySchedulerRun } from './telegram'
 
 export type { ScheduledTweet }
 
@@ -69,6 +70,11 @@ export async function runScheduler(): Promise<{
         result.posted++
         console.log(`[Scheduler] Posted tweet id=${tweet.id}`)
 
+        // Send Telegram notification for successful post
+        await notifyTweetPosted(tweet.translatedText).catch(err =>
+          console.error('[Scheduler] Failed to send Telegram notification:', err)
+        )
+
         await new Promise(resolve => setTimeout(resolve, 1000))
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err)
@@ -82,10 +88,20 @@ export async function runScheduler(): Promise<{
 
         result.failed++
         result.errors.push(`Tweet ${tweet.id}: ${message}`)
+
+        // Send Telegram notification for failed post
+        await notifyTweetFailed(tweet.translatedText, message).catch(err =>
+          console.error('[Scheduler] Failed to send Telegram notification:', err)
+        )
       }
     }
 
     await writeTweets(tweets)
+
+    // Send summary notification if any tweets were processed
+    await notifySchedulerRun(result).catch(err =>
+      console.error('[Scheduler] Failed to send scheduler summary notification:', err)
+    )
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     console.error('[Scheduler] Fatal error:', message)
@@ -102,12 +118,4 @@ export async function getScheduledTweets(): Promise<ScheduledTweet[]> {
 export async function getPendingTweets(): Promise<ScheduledTweet[]> {
   const tweets = await readTweets()
   return tweets.filter(t => t.status === 'pending')
-}
-
-export async function deleteScheduledTweet(id: string): Promise<boolean> {
-  const tweets = await readTweets()
-  const filtered = tweets.filter(t => t.id !== id)
-  if (filtered.length === tweets.length) return false
-  await writeTweets(filtered)
-  return true
 }
