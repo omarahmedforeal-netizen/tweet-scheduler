@@ -151,7 +151,7 @@ export function NewTweetModal({
           <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>\u062a\u063a\u0631\u064a\u062f\u0629 \u062c\u062f\u064a\u062f\u0629</h3>
           <button
             onClick={() => setShowModal(false)}
-            className="p-1.5 rounded-lg transition-all"
+            className="p-1.5 rounded-lg transition-all cursor-pointer"
             style={{ color: 'var(--text-muted)' }}
             onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
             onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
@@ -357,7 +357,7 @@ export function NewTweetModal({
               <button
                 onClick={() => isThreadMode ? onTranslateThread() : onTranslate()}
                 disabled={loadingTranslate || (isThreadMode ? threadItems.every(i => !i.text.trim()) : !sourceText.trim())}
-                className="mt-3 px-5 py-2.5 font-semibold rounded-xl transition-all text-sm flex items-center gap-2"
+                className="mt-3 px-5 py-2.5 font-semibold rounded-xl transition-all text-sm flex items-center gap-2 cursor-pointer"
                 style={
                   loadingTranslate || (isThreadMode ? threadItems.every(i => !i.text.trim()) : !sourceText.trim())
                     ? disabledBtnStyle
