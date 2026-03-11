@@ -136,11 +136,11 @@ export function CalendarGrid({
                               className="text-[10px] font-medium"
                               style={getStatusLabelColor(tweet.status)}
                             >
-                              {tweet.status === 'posted' ? '\u2713 \u0646\u064f\u0634\u0631' : tweet.status === 'failed' ? '\u2717 \u0641\u0634\u0644' : '\u23f3 \u0627\u0646\u062a\u0638\u0627\u0631'}
+                              {tweet.status === 'posted' ? '✓ نُشر' : tweet.status === 'failed' ? '✗ فشل' : '⏳ انتظار'}
                             </span>
                           </div>
                           {tweet.isThread && (
-                            <span className="text-[10px] opacity-60">\u0633\u0644\u0633\u0644\u0629 {(tweet.threadIndex || 0) + 1}</span>
+                            <span className="text-[10px] opacity-60">سلسلة {(tweet.threadIndex || 0) + 1}</span>
                           )}
                         </div>
                       ))}
