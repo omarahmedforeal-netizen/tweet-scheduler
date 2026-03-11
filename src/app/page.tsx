@@ -199,8 +199,8 @@ export default function Home() {
       const monthName = ARABIC_MONTHS[d.getMonth()]
       const dateStr = `${d.getDate()} ${monthName}`
       let label: string
-      if (i === 0) label = `\u0627\u0644\u064a\u0648\u0645 - ${dateStr}`
-      else if (i === 1) label = `\u063a\u062f\u0627\u064b - ${dateStr}`
+      if (i === 0) label = `اليوم - ${dateStr}`
+      else if (i === 1) label = `غداً - ${dateStr}`
       else label = `${dayName} - ${dateStr}`
       days.push({ date: d, label, dayName, dateStr })
     }
@@ -226,10 +226,10 @@ export default function Home() {
   }, [scheduledTweets])
 
   const getSlotTimeLabel = (slot: TimeSlot): string => {
-    if (slot.hour === 9) return `${slot.label} \u0635\u0628\u0627\u062d\u0627\u064b`
-    if (slot.hour === 12) return `${slot.label} \u0638\u0647\u0631\u0627\u064b`
-    if (slot.hour === 16) return `${slot.label} \u0639\u0635\u0631\u0627\u064b`
-    return `${slot.label} \u0645\u0633\u0627\u0621\u064b`
+    if (slot.hour === 9) return `${slot.label} صباحاً`
+    if (slot.hour === 12) return `${slot.label} ظهراً`
+    if (slot.hour === 16) return `${slot.label} عصراً`
+    return `${slot.label} مساءً`
   }
 
   const getSlotIcon = (slot: TimeSlot) => {
@@ -633,7 +633,7 @@ export default function Home() {
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-1" style={{ color: 'var(--text)' }}>
-                \u0645\u0631\u062d\u0628\u0627\u064b\u060c \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \ud83d\udc4b
+                مرحباً، المستخدم 👋
               </h1>
               <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{todayFormatted}</p>
             </div>
@@ -645,7 +645,7 @@ export default function Home() {
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
             >
               <PlusIcon />
-              <span>\u062a\u063a\u0631\u064a\u062f\u0629 \u062c\u062f\u064a\u062f\u0629</span>
+              <span>تغريدة جديدة</span>
             </button>
           </div>
 
@@ -676,13 +676,13 @@ export default function Home() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold flex items-center gap-2" style={{ color: 'var(--text)' }}>
                 <span className="w-1 h-5 rounded-full" style={{ backgroundColor: 'var(--accent)' }}></span>
-                {i18n.scheduledTweets || '\u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0627\u062a \u0627\u0644\u0645\u062c\u062f\u0648\u0644\u0629'}
+                {i18n.scheduledTweets || 'التغريدات المجدولة'}
               </h2>
               <span
                 className="text-xs px-3 py-1 rounded-full"
                 style={{ backgroundColor: 'var(--bg)', color: 'var(--text-muted)' }}
               >
-                {filteredTweets.length} {i18n.tweetUnit || '\u062a\u063a\u0631\u064a\u062f\u0629'}
+                {filteredTweets.length} {i18n.tweetUnit || 'تغريدة'}
               </span>
             </div>
 
@@ -696,7 +696,7 @@ export default function Home() {
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder={i18n.searchPlaceholder || '\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0627\u062a...'}
+                  placeholder={i18n.searchPlaceholder || 'بحث في التغريدات...'}
                   className="w-full rounded-xl pr-10 pl-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all"
                   style={{
                     backgroundColor: 'var(--bg)',
@@ -721,9 +721,9 @@ export default function Home() {
             {/* Tweet Cards */}
             {filteredTweets.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-4xl mb-3">\ud83d\udceb</div>
+                <div className="text-4xl mb-3">📫</div>
                 <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                  {searchQuery ? (i18n.noSearchResults || '\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c') : (i18n.noTweets || '\u0644\u0627 \u062a\u0648\u062c\u062f \u062a\u063a\u0631\u064a\u062f\u0627\u062a \u0645\u062c\u062f\u0648\u0644\u0629')}
+                  {searchQuery ? (i18n.noSearchResults || 'لا توجد نتائج') : (i18n.noTweets || 'لا توجد تغريدات مجدولة')}
                 </p>
               </div>
             ) : (
@@ -799,8 +799,8 @@ export default function Home() {
             className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
             style={{ backgroundColor: 'var(--bg-sidebar)' }}
           >
-            <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text)' }}>{i18n.confirmPublish || '\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u0646\u0634\u0631'}</h3>
-            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>{i18n.confirmPublishMessage || '\u0647\u0644 \u062a\u0631\u064a\u062f \u0646\u0634\u0631 \u0647\u0630\u0647 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629 \u0627\u0644\u0622\u0646\u061f'}</p>
+            <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text)' }}>{i18n.confirmPublish || 'تأكيد النشر'}</h3>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>{i18n.confirmPublishMessage || 'هل تريد نشر هذه التغريدة الآن؟'}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => handlePostNow(confirmPostId)}
@@ -809,7 +809,7 @@ export default function Home() {
                 onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--accent-hover)')}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
               >
-                {i18n.yesPublish || '\u0646\u0639\u0645\u060c \u0627\u0646\u0634\u0631'}
+                {i18n.yesPublish || 'نعم، انشر'}
               </button>
               <button
                 onClick={() => setConfirmPostId(null)}
@@ -818,7 +818,7 @@ export default function Home() {
                 onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
               >
-                {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
+                {i18n.cancel || 'إلغاء'}
               </button>
             </div>
           </div>
@@ -832,8 +832,8 @@ export default function Home() {
             className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
             style={{ backgroundColor: 'var(--bg-sidebar)' }}
           >
-            <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text)' }}>{i18n.confirmDelete || '\u062a\u0623\u0643\u064a\u062f \u0627\u0644\u062d\u0630\u0641'}</h3>
-            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>{i18n.confirmDeleteMessage || '\u0647\u0644 \u062a\u0631\u064a\u062f \u062d\u0630\u0641 \u0647\u0630\u0647 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629\u061f'}</p>
+            <h3 className="text-lg font-bold mb-3" style={{ color: 'var(--text)' }}>{i18n.confirmDelete || 'تأكيد الحذف'}</h3>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>{i18n.confirmDeleteMessage || 'هل تريد حذف هذه التغريدة؟'}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => handleDelete(confirmDeleteId)}
@@ -842,7 +842,7 @@ export default function Home() {
                 onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#dc2626')}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--error)')}
               >
-                {i18n.yesDelete || '\u0646\u0639\u0645\u060c \u0627\u062d\u0630\u0641'}
+                {i18n.yesDelete || 'نعم، احذف'}
               </button>
               <button
                 onClick={() => setConfirmDeleteId(null)}
@@ -851,7 +851,7 @@ export default function Home() {
                 onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
               >
-                {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
+                {i18n.cancel || 'إلغاء'}
               </button>
             </div>
           </div>
@@ -883,7 +883,7 @@ export default function Home() {
             }}
           >
             <span className="text-sm font-medium whitespace-nowrap" style={{ color: 'var(--text)' }}>
-              {selectedIds.size} {i18n.selected || '\u0645\u062d\u062f\u062f'}
+              {selectedIds.size} {i18n.selected || 'محدد'}
             </span>
             <div className="w-px h-6" style={{ backgroundColor: 'var(--border)' }} />
             <button
@@ -899,7 +899,7 @@ export default function Home() {
               onMouseLeave={e => { if (!loadingBulk) e.currentTarget.style.backgroundColor = 'var(--accent)' }}
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
-              {i18n.publishSelected || '\u0646\u0634\u0631 \u0627\u0644\u0645\u062d\u062f\u062f'}
+              {i18n.publishSelected || 'نشر المحدد'}
             </button>
             <button
               onClick={handleBulkDelete}
@@ -914,7 +914,7 @@ export default function Home() {
               onMouseLeave={e => { if (!loadingBulk) e.currentTarget.style.backgroundColor = 'var(--error)' }}
             >
               {loadingBulk ? <Spinner size="w-3 h-3" /> : null}
-              {i18n.deleteSelected || '\u062d\u0630\u0641 \u0627\u0644\u0645\u062d\u062f\u062f'}
+              {i18n.deleteSelected || 'حذف المحدد'}
             </button>
             <button
               onClick={() => setSelectedIds(new Set())}
@@ -923,7 +923,7 @@ export default function Home() {
               onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--border-light)')}
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--bg)')}
             >
-              {i18n.cancel || '\u0625\u0644\u063a\u0627\u0621'}
+              {i18n.cancel || 'إلغاء'}
             </button>
           </div>
         </div>
