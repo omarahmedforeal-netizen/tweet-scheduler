@@ -639,7 +639,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => openNewTweetModal()}
-              className="px-4 py-2.5 text-sm font-semibold rounded-xl transition-all flex items-center gap-2"
+              className="px-4 py-2.5 text-sm font-semibold rounded-xl transition-all flex items-center gap-2 cursor-pointer"
               style={{ backgroundColor: 'var(--accent)', color: '#fff', boxShadow: 'var(--shadow-sm)' }}
               onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--accent-hover)')}
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
@@ -804,7 +804,7 @@ export default function Home() {
             <div className="flex gap-3">
               <button
                 onClick={() => handlePostNow(confirmPostId)}
-                className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm"
+                className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm cursor-pointer"
                 style={{ backgroundColor: 'var(--accent)', color: '#fff' }}
                 onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--accent-hover)')}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
@@ -837,7 +837,7 @@ export default function Home() {
             <div className="flex gap-3">
               <button
                 onClick={() => handleDelete(confirmDeleteId)}
-                className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm"
+                className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm cursor-pointer"
                 style={{ backgroundColor: 'var(--error)', color: '#fff' }}
                 onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#dc2626')}
                 onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--error)')}
