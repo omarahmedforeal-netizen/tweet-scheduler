@@ -84,7 +84,7 @@ export function TweetCard({
           type="checkbox"
           checked={isSelected}
           onChange={() => onSelect(tweet.id)}
-          className="mt-1 shrink-0 w-4 h-4 rounded"
+          className="mt-1 shrink-0 w-4 h-4 rounded cursor-pointer"
           style={{ borderColor: 'var(--border)', accentColor: 'var(--accent)' }}
         />
         <div className="flex-1 min-w-0">
@@ -131,7 +131,7 @@ export function TweetCard({
             <>
               <button
                 onClick={() => onEdit(tweet)}
-                className="text-xs px-2 py-1.5 rounded-lg transition-all"
+                className="text-xs px-2 py-1.5 rounded-lg transition-all cursor-pointer"
                 style={{ color: 'var(--text-secondary)' }}
                 title={i18n.edit || '\u062a\u0639\u062f\u064a\u0644'}
               >
