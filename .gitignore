@@ -3,3 +3,7 @@ node_modules/
 .env.local
 *.tsbuildinfo
 next-env.d.ts
+
+# OpenNext build output
+.open-next
+.dev.vars
