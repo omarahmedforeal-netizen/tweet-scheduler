@@ -98,7 +98,7 @@ export function StatusPills({ stats, filterTab, setFilterTab, i18n }: StatusPill
       {/* Pending */}
       <button
         onClick={() => setFilterTab('pending')}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
+        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer"
         style={{ ...getPillStyle('pending', filterTab === 'pending'), border: '1px solid', borderColor: getPillStyle('pending', filterTab === 'pending').borderColor }}
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
