@@ -18,11 +18,11 @@ interface SidebarProps {
 }
 
 const NAV_ITEMS: { key: NavSection; labelKey: string; fallback: string; icon: React.ReactNode }[] = [
-  { key: 'schedule', labelKey: '', fallback: '\u062c\u062f\u0648\u0644\u0629 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0627\u062a', icon: <CalendarIcon /> },
-  { key: 'ai-write', labelKey: '', fallback: '\u0643\u062a\u0627\u0628\u0629 \u062a\u063a\u0631\u064a\u062f\u0627\u062a \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a', icon: <SparkleIcon /> },
-  { key: 'amazon-marketing', labelKey: '', fallback: '\u062a\u0633\u0648\u064a\u0642 \u0645\u0646\u062a\u062c\u0627\u062a \u0623\u0645\u0627\u0632\u0648\u0646', icon: <CartIcon /> },
-  { key: 'amazon-browse', labelKey: '', fallback: '\u062a\u0635\u0641\u062d \u0645\u0646\u062a\u062c\u0627\u062a \u0623\u0645\u0627\u0632\u0648\u0646', icon: <BrowseIcon /> },
-  { key: 'rewrite', labelKey: '', fallback: '\u0625\u0639\u0627\u062f\u0629 \u0643\u062a\u0627\u0628\u0629 \u062a\u063a\u0631\u064a\u062f\u0629', icon: <RefreshIcon /> },
+  { key: 'schedule', labelKey: '', fallback: 'جدولة التغريدات', icon: <CalendarIcon /> },
+  { key: 'ai-write', labelKey: '', fallback: 'كتابة تغريدات بالذكاء الاصطناعي', icon: <SparkleIcon /> },
+  { key: 'amazon-marketing', labelKey: '', fallback: 'تسويق منتجات أمازون', icon: <CartIcon /> },
+  { key: 'amazon-browse', labelKey: '', fallback: 'تصفح منتجات أمازون', icon: <BrowseIcon /> },
+  { key: 'rewrite', labelKey: '', fallback: 'إعادة كتابة تغريدة', icon: <RefreshIcon /> },
 ]
 
 export function Sidebar({
@@ -84,11 +84,11 @@ export function Sidebar({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
-              \u0645
+              م
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>\u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645</span>
+                <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>المستخدم</span>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ backgroundColor: 'var(--warning-bg, #fef3c7)', color: 'var(--warning-text, #b45309)' }}>Pro</span>
               </div>
               <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>user@postlate.com</p>
@@ -126,14 +126,14 @@ export function Sidebar({
             style={{ color: 'var(--text-secondary)' }}
           >
             <span style={{ color: 'var(--text-muted)' }}>{isDark ? <SunIcon /> : <MoonIcon />}</span>
-            <span>{isDark ? (i18n.lightMode || '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d') : (i18n.darkMode || '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062f\u0627\u0643\u0646')}</span>
+            <span>{isDark ? (i18n.lightMode || 'الوضع الفاتح') : (i18n.darkMode || 'الوضع الداكن')}</span>
           </button>
           <button
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
             style={{ color: 'var(--text-secondary)' }}
           >
             <span style={{ color: 'var(--text-muted)' }}><GearIcon /></span>
-            <span>\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a</span>
+            <span>الإعدادات</span>
           </button>
         </div>
       </aside>
