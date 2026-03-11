@@ -8,6 +8,11 @@
    Postlate - Light/Clean Dashboard Theme
    ============================================ */
 
+/* ---------- Font Inheritance ---------- */
+*, *::before, *::after {
+  font-family: inherit;
+}
+
 /* ---------- CSS Variables ---------- */
 :root {
   --bg: #F8F9FA;
@@ -36,6 +41,29 @@
   --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark mode: activates when html does NOT have .light class */
+:root:not(.light) {
+  --bg: #0f0f23;
+  --bg-sidebar: #1a1a2e;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #6C63FF;
+  --accent-hover: #7c74ff;
+  --accent-light: rgba(108, 99, 255, 0.12);
+  --accent-ring: rgba(108, 99, 255, 0.35);
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --border: #2a2a4a;
+  --border-light: #1e1e38;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Also support .dark class for backward compatibility */
 .dark {
   --bg: #0f0f23;
   --bg-sidebar: #1a1a2e;
@@ -66,7 +94,7 @@ html {
 }
 
 body {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Tajawal', sans-serif !important;
   background-color: var(--bg);
   color: var(--text);
   direction: rtl;
@@ -111,7 +139,7 @@ body {
 }
 
 
-/* ---------- Light Mode Override ---------- */
+/* ---------- Light Mode Override (explicit) ---------- */
 .light {
   --bg: #F8F9FA;
   --bg-sidebar: #FFFFFF;
@@ -129,6 +157,16 @@ body {
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1);
 }
+
+
+/* ---------- Theme Utility Classes ---------- */
+.theme-bg { background-color: var(--bg) !important; }
+.theme-bg-card { background-color: var(--bg-sidebar) !important; }
+.theme-text { color: var(--text) !important; }
+.theme-text-secondary { color: var(--text-secondary) !important; }
+.theme-text-muted { color: var(--text-muted) !important; }
+.theme-border { border-color: var(--border) !important; }
+.theme-border-light { border-color: var(--border-light) !important; }
 
 
 /* ============================================
@@ -223,6 +261,7 @@ body {
   color: #b45309;
 }
 
+:root:not(.light) .status-pill.pending,
 .dark .status-pill.pending {
   background-color: rgba(245, 158, 11, 0.15);
   color: #fbbf24;
@@ -233,6 +272,7 @@ body {
   color: #15803d;
 }
 
+:root:not(.light) .status-pill.posted,
 .dark .status-pill.posted {
   background-color: rgba(34, 197, 94, 0.15);
   color: #4ade80;
@@ -243,6 +283,7 @@ body {
   color: #dc2626;
 }
 
+:root:not(.light) .status-pill.failed,
 .dark .status-pill.failed {
   background-color: rgba(239, 68, 68, 0.15);
   color: #f87171;
