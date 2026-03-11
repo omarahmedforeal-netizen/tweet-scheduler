@@ -67,7 +67,7 @@ export function Sidebar({
           {/* Close button for mobile */}
           <button
             onClick={() => setSidebarOpen(false)}
-            className="mr-auto lg:hidden p-1 rounded-lg transition-all"
+            className="mr-auto lg:hidden p-1 rounded-lg transition-all cursor-pointer"
             style={{ color: 'var(--text-secondary)' }}
           >
             <CloseIcon />
@@ -89,7 +89,7 @@ export function Sidebar({
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>\u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">Pro</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ backgroundColor: 'var(--warning-bg, #fef3c7)', color: 'var(--warning-text, #b45309)' }}>Pro</span>
               </div>
               <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>user@postlate.com</p>
             </div>
@@ -166,7 +166,7 @@ export function MobileHeader({
       </div>
       <button
         onClick={() => setSidebarOpen(true)}
-        className="p-2 rounded-xl transition-all"
+        className="p-2 rounded-xl transition-all cursor-pointer"
         style={{ color: 'var(--text-secondary)' }}
       >
         <MenuIcon />
