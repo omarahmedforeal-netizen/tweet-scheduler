@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+/* Tajawal font is loaded via next/font/google in layout.tsx */
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 @layer base {
   html {
-    font-family: 'Tajawal', sans-serif !important;
+    font-family: var(--font-tajawal), 'Tajawal', sans-serif !important;
   }
   *, *::before, *::after {
     font-family: inherit !important;
@@ -106,7 +106,6 @@
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
 }
 
-
 /* ---------- Base Styles ---------- */
 html {
   scroll-behavior: smooth;
@@ -115,7 +114,6 @@ html {
 }
 
 body {
-  font-family: 'Tajawal', sans-serif !important;
   background-color: var(--bg);
   color: var(--text);
   direction: rtl;
@@ -133,7 +131,6 @@ body {
   background-color: var(--accent);
   color: #ffffff;
 }
-
 
 /* ---------- Custom Scrollbar ---------- */
 ::-webkit-scrollbar {
@@ -159,7 +156,6 @@ body {
   scrollbar-color: var(--accent-ring) transparent;
 }
 
-
 /* ---------- Light Mode Override (explicit) ---------- */
 .light {
   --bg: #F8F9FA;
@@ -181,7 +177,6 @@ body {
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1);
 }
 
-
 /* ---------- Theme Utility Classes ---------- */
 .theme-bg { background-color: var(--bg) !important; }
 .theme-bg-card { background-color: var(--bg-sidebar) !important; }
@@ -190,7 +185,6 @@ body {
 .theme-text-muted { color: var(--text-muted) !important; }
 .theme-border { border-color: var(--border) !important; }
 .theme-border-light { border-color: var(--border-light) !important; }
-
 
 /* ============================================
    Component Styles
@@ -226,7 +220,6 @@ body {
   background-color: var(--accent-hover);
 }
 
-
 /* ---------- Calendar Card ---------- */
 .calendar-card {
   background-color: var(--bg-sidebar);
@@ -241,7 +234,6 @@ body {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
-
 
 /* ---------- Time Slots ---------- */
 .time-slot {
@@ -263,7 +255,6 @@ body {
   border-style: solid;
   border-color: var(--border);
 }
-
 
 /* ---------- Status Pills ---------- */
 .status-pill {
@@ -312,7 +303,6 @@ body {
   color: #f87171;
 }
 
-
 /* ---------- Tweet Card ---------- */
 .tweet-card {
   background-color: var(--bg-sidebar);
@@ -326,7 +316,6 @@ body {
 .tweet-card:hover {
   box-shadow: var(--shadow-md);
 }
-
 
 /* ---------- Modal ---------- */
 .modal-overlay {
@@ -353,7 +342,6 @@ body {
   overflow-y: auto;
   animation: slideUp 300ms ease-out;
 }
-
 
 /* ============================================
    Animations
@@ -423,7 +411,6 @@ body {
   }
 }
 
-
 /* ============================================
    Utility Classes
    ============================================ */
@@ -452,7 +439,6 @@ body {
   animation: toastExit 350ms ease-in forwards;
 }
 
-
 /* ============================================
    Form Elements
    ============================================ */
@@ -467,7 +453,7 @@ input[type="time"],
 input[type="datetime-local"],
 textarea,
 select {
-  font-family: 'Tajawal', sans-serif;
+  font-family: inherit;
   background-color: var(--bg-sidebar);
   color: var(--text);
   border: 1.5px solid var(--border);
@@ -496,7 +482,6 @@ textarea {
   min-height: 5rem;
 }
 
-
 /* ---------- Buttons ---------- */
 .btn-primary {
   display: inline-flex;
@@ -508,7 +493,7 @@ textarea {
   color: #ffffff;
   border: none;
   border-radius: var(--radius-md);
-  font-family: 'Tajawal', sans-serif;
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -540,7 +525,7 @@ textarea {
   color: var(--text);
   border: none;
   border-radius: var(--radius-md);
-  font-family: 'Tajawal', sans-serif;
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -556,7 +541,6 @@ textarea {
 .btn-ghost:active {
   transform: scale(0.98);
 }
-
 
 /* ============================================
    Responsive - Mobile
@@ -606,7 +590,6 @@ textarea {
   }
 }
 
-
 /* ---------- Accessibility ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -618,7 +601,6 @@ textarea {
     scroll-behavior: auto !important;
   }
 }
-
 
 /* ---------- Print Styles ---------- */
 @media print {
