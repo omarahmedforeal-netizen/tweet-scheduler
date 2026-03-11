@@ -148,7 +148,7 @@ export function NewTweetModal({
           className="flex items-center justify-between px-6 py-4"
           style={{ borderBottom: '1px solid var(--border-light)' }}
         >
-          <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>\u062a\u063a\u0631\u064a\u062f\u0629 \u062c\u062f\u064a\u062f\u0629</h3>
+          <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>تغريدة جديدة</h3>
           <button
             onClick={() => setShowModal(false)}
             className="p-1.5 rounded-lg transition-all cursor-pointer"
@@ -169,14 +169,14 @@ export function NewTweetModal({
                 className="flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all"
                 style={tabStyle(inputMode === 'fetch' && !isThreadMode)}
               >
-                {i18n.fetchFromUrl || '\u062c\u0644\u0628 \u062a\u063a\u0631\u064a\u062f\u0629'}
+                {i18n.fetchFromUrl || 'جلب تغريدة'}
               </button>
               <button
                 onClick={() => { setInputMode('write'); setIsThreadMode(false) }}
                 className="flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all"
                 style={tabStyle(inputMode === 'write' && !isThreadMode)}
               >
-                {i18n.writeMode || '\u0643\u062a\u0627\u0628\u0629'}
+                {i18n.writeMode || 'كتابة'}
               </button>
             </div>
           </div>
@@ -188,7 +188,7 @@ export function NewTweetModal({
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all border"
               style={pillStyle(isThreadMode)}
             >
-              {i18n.thread || '\u0633\u0644\u0633\u0644\u0629'} {isThreadMode ? '\u2713' : ''}
+              {i18n.thread || 'سلسلة'} {isThreadMode ? '✓' : ''}
             </button>
           </div>
 
@@ -196,7 +196,7 @@ export function NewTweetModal({
           {inputMode === 'fetch' && !isThreadMode && (
             <div>
               <div className="mb-4">
-                <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.tweetUrl || '\u0631\u0627\u0628\u0637 \u0627\u0644\u062a\u063a\u0631\u064a\u062f\u0629'}</label>
+                <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.tweetUrl || 'رابط التغريدة'}</label>
                 <div className="flex gap-2">
                   <input
                     type="url"
@@ -222,15 +222,15 @@ export function NewTweetModal({
                     onMouseEnter={e => { if (!loadingFetch && tweetUrl.trim()) Object.assign(e.currentTarget.style, primaryBtnHoverStyle) }}
                     onMouseLeave={e => { if (!loadingFetch && tweetUrl.trim()) Object.assign(e.currentTarget.style, primaryBtnStyle) }}
                   >
-                    {loadingFetch ? <Spinner /> : (i18n.fetch || '\u062c\u0644\u0628')}
+                    {loadingFetch ? <Spinner /> : (i18n.fetch || 'جلب')}
                   </button>
                 </div>
-                {fetchError && <p className="mt-2 text-sm" style={{ color: 'var(--error)' }}>\u26a0 {fetchError}</p>}
+                {fetchError && <p className="mt-2 text-sm" style={{ color: 'var(--error)' }}>⚠ {fetchError}</p>}
               </div>
 
               {fetchedText && (
                 <div className="mb-4">
-                  <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.originalText || '\u0627\u0644\u0646\u0635 \u0627\u0644\u0623\u0635\u0644\u064a'}</label>
+                  <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.originalText || 'النص الأصلي'}</label>
                   <div
                     className="p-3 rounded-xl"
                     style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}
@@ -246,12 +246,12 @@ export function NewTweetModal({
           {inputMode === 'write' && !isThreadMode && (
             <div>
               <div className="mb-4">
-                <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.writeYourTweet || '\u0627\u0643\u062a\u0628 \u062a\u063a\u0631\u064a\u062f\u062a\u0643'}</label>
+                <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.writeYourTweet || 'اكتب تغريدتك'}</label>
                 <textarea
                   value={directText}
                   onChange={e => setDirectText(e.target.value)}
                   rows={4}
-                  placeholder={i18n.writeTweetPlaceholder || '\u0627\u0643\u062a\u0628 \u062a\u063a\u0631\u064a\u062f\u062a\u0643 \u0647\u0646\u0627...'}
+                  placeholder={i18n.writeTweetPlaceholder || 'اكتب تغريدتك هنا...'}
                   className={`w-full rounded-xl px-4 py-3 text-sm leading-relaxed resize-none ${focusRingStyle}`}
                   style={{ ...inputBgStyle, borderWidth: '1px', borderStyle: 'solid' }}
                   onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 2px var(--accent-ring)'; e.currentTarget.style.borderColor = 'var(--accent)' }}
@@ -309,7 +309,7 @@ export function NewTweetModal({
                         value={item.text}
                         onChange={e => updateThreadItem(index, 'text', e.target.value)}
                         rows={3}
-                        placeholder={`${i18n.tweetNumber || '\u062a\u063a\u0631\u064a\u062f\u0629'} ${index + 1}...`}
+                        placeholder={`${i18n.tweetNumber || 'تغريدة'} ${index + 1}...`}
                         className="w-full bg-transparent text-sm leading-relaxed resize-none focus:outline-none"
                         style={{ color: 'var(--text)' }}
                         dir="rtl"
@@ -333,7 +333,7 @@ export function NewTweetModal({
                   e.currentTarget.style.backgroundColor = 'transparent'
                 }}
               >
-                <PlusIcon /> {i18n.addTweet || '\u0625\u0636\u0627\u0641\u0629 \u062a\u063a\u0631\u064a\u062f\u0629'}
+                <PlusIcon /> {i18n.addTweet || 'إضافة تغريدة'}
               </button>
             </div>
           )}
@@ -341,7 +341,7 @@ export function NewTweetModal({
           {/* ===== LANGUAGE SELECTOR ===== */}
           {(hasSourceText || isThreadMode) && (
             <div className="mt-4 mb-4">
-              <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.translationLanguage || '\u0644\u063a\u0629 \u0627\u0644\u062a\u0631\u062c\u0645\u0629'}</label>
+              <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.translationLanguage || 'لغة الترجمة'}</label>
               <div className="flex gap-2 flex-wrap">
                 {languages.map(lang => (
                   <button
@@ -372,9 +372,9 @@ export function NewTweetModal({
                   if (!disabled) Object.assign(e.currentTarget.style, primaryBtnStyle)
                 }}
               >
-                {loadingTranslate ? <><Spinner /> {i18n.translating || '\u062c\u0627\u0631\u064a \u0627\u0644\u062a\u0631\u062c\u0645\u0629...'}</> : (i18n.translate || '\u062a\u0631\u062c\u0645\u0629')}
+                {loadingTranslate ? <><Spinner /> {i18n.translating || 'جاري الترجمة...'}</> : (i18n.translate || 'ترجمة')}
               </button>
-              {translateError && <p className="mt-2 text-sm" style={{ color: 'var(--error)' }}>\u26a0 {translateError}</p>}
+              {translateError && <p className="mt-2 text-sm" style={{ color: 'var(--error)' }}>⚠ {translateError}</p>}
             </div>
           )}
 
@@ -382,7 +382,7 @@ export function NewTweetModal({
           {!isThreadMode && (loadingTranslate || translatedText) && (
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm" style={{ color: 'var(--text-secondary)' }}>{i18n.translatedText || '\u0627\u0644\u0646\u0635 \u0627\u0644\u0645\u062a\u0631\u062c\u0645'}</label>
+                <label className="text-sm" style={{ color: 'var(--text-secondary)' }}>{i18n.translatedText || 'النص المترجم'}</label>
                 {!loadingTranslate && translatedText && (
                   <span
                     className="text-xs font-mono"
@@ -401,7 +401,7 @@ export function NewTweetModal({
               >
                 {loadingTranslate ? (
                   <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-muted)' }}>
-                    <Spinner size="w-4 h-4" /> {i18n.translating || '\u062c\u0627\u0631\u064a \u0627\u0644\u062a\u0631\u062c\u0645\u0629...'}
+                    <Spinner size="w-4 h-4" /> {i18n.translating || 'جاري الترجمة...'}
                   </div>
                 ) : (
                   <textarea
@@ -414,14 +414,14 @@ export function NewTweetModal({
                   />
                 )}
               </div>
-              {charOver && <p className="mt-1 text-xs" style={{ color: 'var(--error)' }}>{i18n.charLimitExceeded || '\u062a\u062c\u0627\u0648\u0632\u062a \u0627\u0644\u062d\u062f \u0627\u0644\u0645\u0633\u0645\u0648\u062d'} ({CHAR_LIMIT} {i18n.charUnit || '\u062d\u0631\u0641'})</p>}
+              {charOver && <p className="mt-1 text-xs" style={{ color: 'var(--error)' }}>{i18n.charLimitExceeded || 'تجاوزت الحد المسموح'} ({CHAR_LIMIT} {i18n.charUnit || 'حرف'})</p>}
             </div>
           )}
 
           {/* ===== SCHEDULE TIME ===== */}
           {((translatedText && !loadingTranslate && !isThreadMode) || (isThreadMode && threadItems.some(i => i.text.trim()))) && (
             <div className="mb-5">
-              <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.publishTimeLabel || '\u0648\u0642\u062a \u0627\u0644\u0646\u0634\u0631'}</label>
+              <label className="block text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>{i18n.publishTimeLabel || 'وقت النشر'}</label>
               <input
                 type="datetime-local"
                 value={scheduledAt}
@@ -437,7 +437,7 @@ export function NewTweetModal({
           {/* ===== SCHEDULE BUTTON ===== */}
           {((translatedText && !loadingTranslate && !isThreadMode) || (isThreadMode && threadItems.some(i => i.text.trim()))) && (
             <div>
-              {scheduleError && <p className="mb-3 text-sm" style={{ color: 'var(--error)' }}>\u26a0 {scheduleError}</p>}
+              {scheduleError && <p className="mb-3 text-sm" style={{ color: 'var(--error)' }}>⚠ {scheduleError}</p>}
               <button
                 onClick={onSchedule}
                 disabled={loadingSchedule || (!isThreadMode && charOver)}
@@ -455,8 +455,8 @@ export function NewTweetModal({
                 }}
               >
                 {loadingSchedule ? (
-                  <span className="flex items-center justify-center gap-2"><Spinner size="w-5 h-5" /> {i18n.scheduling || '\u062c\u0627\u0631\u064a \u0627\u0644\u062c\u062f\u0648\u0644\u0629...'}</span>
-                ) : isThreadMode ? `${i18n.scheduleThread || '\u062c\u062f\u0648\u0644\u0629 \u0627\u0644\u0633\u0644\u0633\u0644\u0629'} (${threadItems.filter(i => i.text.trim()).length} ${i18n.tweetsUnit || '\u062a\u063a\u0631\u064a\u062f\u0627\u062a'})` : (i18n.schedulePublish || '\u062c\u062f\u0648\u0644\u0629 \u0627\u0644\u0646\u0634\u0631')}
+                  <span className="flex items-center justify-center gap-2"><Spinner size="w-5 h-5" /> {i18n.scheduling || 'جاري الجدولة...'}</span>
+                ) : isThreadMode ? `${i18n.scheduleThread || 'جدولة السلسلة'} (${threadItems.filter(i => i.text.trim()).length} ${i18n.tweetsUnit || 'تغريدات'})` : (i18n.schedulePublish || 'جدولة النشر')}
               </button>
             </div>
           )}
