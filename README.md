@@ -1,88 +1,108 @@
-# Tweet Scheduler - مجدول التغريدات
+# Postlate - جدولة التغريدات
 
-تطبيق Next.js 14 لجلب التغريدات وترجمتها إلى عدة لغات ولهجات وجدولة نشرها.
+## نظرة عامة
 
-## الميزات
+تطبيق ويب لجدولة ونشر التغريدات بشكل تلقائي مع ترجمة بالذكاء الاصطناعي ودعم الثريدات. مبني بـ Next.js 14 و Upstash Redis.
 
-- **جلب التغريدات** من رابط Twitter/X عبر oEmbed API (مع fallback لـ Syndication API)
-- **ترجمة متعددة اللغات** باستخدام GPT-4o:
-  - اللهجة السعودية العامية
-  - اللهجة المصرية العامية
-  - العربية الفصحى
-  - English
-  - Francais
-- **جدولة النشر** في وقت محدد مع cron خارجي
-- **نشر فوري** بضغطة زر مع تأكيد
-- **حذف التغريدات** مع تأكيد
-- **عداد الأحرف** (حد 280 حرف لتويتر)
-- **إشعارات Toast** متحركة تختفي تلقائياً
-- واجهة عربية داكنة (RTL) بتصميم Glass Morphism
+## المميزات
+
+- جدولة تغريدات مع calendar view (اليوم/غداً/بعد غد)
+- 4 فترات زمنية: صباحاً (09:00) / ظهراً (12:00) / عصراً (16:00) / مساءً (20:00)
+- ترجمة تلقائية بالذكاء الاصطناعي (سعودي/مصري/فصحى/إنجليزي/فرنسي)
+- دعم الثريدات (تغريدات متسلسلة)
+- جلب نص تغريدة من رابط
+- نشر فوري أو مجدول
+- إشعارات تلغرام عند النشر/الفشل
+- تحكم بالكتلة (حذف/نشر مجموعة)
+- بحث وفلترة حسب الحالة
+- وضع مظلم/فاتح
+- تصميم متجاوب (Desktop + Mobile)
+- واجهة عربية RTL بالكامل
+
+## التقنيات
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Upstash Redis (تخزين البيانات)
+- Twitter API v2 (نشر التغريدات)
+- OpenAI API (ترجمة بالذكاء الاصطناعي)
+- Telegram Bot API (إشعارات)
+- Vercel Cron Jobs (جدولة تلقائية)
 
 ## التثبيت
 
 ```bash
+git clone https://github.com/omarahmedforeal-netizen/tweet-scheduler.git
+cd tweet-scheduler
 npm install
+```
+
+## المتغيرات البيئية
+
+أنسخ `.env.example` إلى `.env.local`:
+
+```bash
 cp .env.example .env.local
-# عدّل .env.local وأضف مفاتيح API
-npm run dev
 ```
 
-## متغيرات البيئة (.env.local)
+المتغيرات المطلوبة:
 
-```env
-OPENAI_API_KEY=sk-...
-TWITTER_API_KEY=...
-TWITTER_API_SECRET=...
-TWITTER_ACCESS_TOKEN=...
-TWITTER_ACCESS_SECRET=...
-CRON_SECRET=any_random_secret   # اختياري - لحماية endpoint الكرون
-```
+| المتغير | الوصف |
+|---------|-------|
+| TWITTER_API_KEY | مفتاح Twitter API |
+| TWITTER_API_SECRET | سر Twitter API |
+| TWITTER_ACCESS_TOKEN | توكن الوصول |
+| TWITTER_ACCESS_SECRET | سر توكن الوصول |
+| OPENAI_API_KEY | مفتاح OpenAI للترجمة |
+| UPSTASH_REDIS_REST_URL | رابط Upstash Redis |
+| UPSTASH_REDIS_REST_TOKEN | توكن Upstash Redis |
+| CRON_SECRET | سر لحماية الـ cron endpoint |
+| TELEGRAM_BOT_TOKEN | توكن بوت تلغرام للإشعارات |
+| TELEGRAM_CHAT_ID | معرف المحادثة بتلغرام |
 
 ## هيكل المشروع
 
 ```
-tweet-scheduler/
-├── src/app/
-│   ├── page.tsx                    <- الواجهة الرئيسية
-│   ├── layout.tsx
-│   ├── globals.css
-│   └── api/
-│       ├── fetch-tweet/route.ts    <- جلب نص التغريدة (oEmbed + Syndication)
-│       ├── translate/route.ts      <- الترجمة متعددة اللغات بـ OpenAI
-│       ├── schedule/route.ts       <- CRUD التغريدات المجدولة
-│       ├── post-tweet/route.ts     <- النشر على X
-│       └── cron/route.ts           <- تشغيل المجدول
-├── src/lib/
-│   ├── types.ts                    <- الأنواع المشتركة (ScheduledTweet)
-│   ├── data.ts                     <- قراءة/كتابة JSON المشتركة
-│   └── scheduler.ts               <- منطق المجدول التلقائي
-└── data/
-    └── scheduled.json             <- ملف التخزين المحلي
+src/
+├── app/
+│   ├── api/
+│   │   ├── cron/          # Cron job - فحص ونشر التغريدات المجدولة
+│   │   ├── fetch-tweet/   # جلب نص تغريدة من رابط
+│   │   ├── post-tweet/    # نشر تغريدة فوراً
+│   │   ├── schedule/      # CRUD عمليات الجدولة
+│   │   └── translate/     # ترجمة بالذكاء الاصطناعي
+│   ├── globals.css        # الأنماط العامة
+│   ├── layout.tsx         # التخطيط الرئيسي
+│   └── page.tsx           # الصفحة الرئيسية (Dashboard)
+├── lib/
+│   └── redis.ts           # اتصال Upstash Redis
+public/
+├── i18n.json              # ملف الترجمة العربية
+data/
+└── scheduled.json         # بيانات احتياطية
 ```
 
 ## API Endpoints
 
-| Method | Endpoint | الوصف |
-|--------|----------|-------|
-| POST | `/api/fetch-tweet` | جلب نص تغريدة من رابط |
-| POST | `/api/translate` | ترجمة نص (مع اختيار اللغة) |
-| GET | `/api/schedule` | قائمة التغريدات المجدولة |
-| POST | `/api/schedule` | إضافة تغريدة مجدولة |
-| PATCH | `/api/schedule` | تحديث حالة تغريدة |
-| DELETE | `/api/schedule` | حذف تغريدة |
-| POST | `/api/post-tweet` | نشر تغريدة فوراً |
-| GET | `/api/cron?secret=...` | تشغيل المجدول |
+| Endpoint | Method | الوصف |
+|----------|--------|-------|
+| /api/schedule | GET | جلب كل التغريدات المجدولة |
+| /api/schedule | POST | جدولة تغريدة جديدة |
+| /api/schedule | PUT | تعديل تغريدة مجدولة |
+| /api/schedule | DELETE | حذف تغريدة (أو مجموعة) |
+| /api/post-tweet | POST | نشر تغريدة فوراً |
+| /api/fetch-tweet | POST | جلب نص من رابط تغريدة |
+| /api/translate | POST | ترجمة نص |
+| /api/cron | GET | فحص ونشر التغريدات المستحقة |
 
-## تشغيل المجدول التلقائي
+## النشر على Vercel
 
-استدعِ `/api/cron?secret=YOUR_CRON_SECRET` كل دقيقة باستخدام:
-- **Vercel Cron Jobs** (في `vercel.json`)
-- **cron-job.org** (مجاني)
-- أي خدمة cron خارجية
+1. ارفع المشروع على GitHub
+2. اربطه بـ Vercel
+3. أضف المتغيرات البيئية
+4. الـ Cron job يعمل تلقائياً كل 5 دقائق عبر `vercel.json`
 
-## ملاحظات
+## الترخيص
 
-- يتطلب Twitter Developer Account بصلاحيات Read & Write
-- يستخدم `data/scheduled.json` للتخزين (مناسب للتطوير، استخدم قاعدة بيانات للإنتاج)
-- جلب التغريدات يستخدم Twitter oEmbed API (مجاني، بدون مصادقة) مع fallback لـ Syndication API
-- الترجمة تدعم 5 لغات/لهجات مع GPT-4o
+MIT
