@@ -109,7 +109,7 @@ export function EditModal({
           <button
             onClick={onSave}
             disabled={isDisabled}
-            className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2 cursor-pointer"
             style={
               isDisabled
                 ? { backgroundColor: 'var(--border)', color: 'var(--text-muted)', cursor: 'not-allowed' }
